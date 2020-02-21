@@ -20,6 +20,7 @@
     "nodemon": "^1.18.9",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-loadingg": "^1.7.1",
     "webpack": "^4.28.3",
     "webpack-cli": "^3.1.2"
   },

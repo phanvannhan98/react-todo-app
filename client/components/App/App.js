@@ -1,14 +1,28 @@
 import React from 'react';
 import './App.scss';
+import { SemipolarLoading } from 'react-loadingg';
 import axios from 'axios';
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            load: true
+        }
+    }
+    
+
     componentDidMount(){
         axios.get('/api').then((data)=>console.log(data))
+        setTimeout(()=>this.setState({load: false}),1000)
     }
     render() {
+        console.log(this.state.load);
+        
         return (
-            <div className="wrapper">
+            <>
+            {this.state.load ? <SemipolarLoading color="red" speed="1" size="large"/> : null}
+            <div className="wrapper" style={this.state.load ? {opacity: 0.2} : {}}>
                 <div className="sidebar">
                     <a className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
@@ -294,6 +308,7 @@ class App extends React.Component {
                     </div>
                 </div>
             </div>
+            </>
         )
     }
 }
