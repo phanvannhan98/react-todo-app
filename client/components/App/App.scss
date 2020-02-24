@@ -87,8 +87,20 @@
     }
   }
 
+  .category-btn::after{
+    content: '\002B';
+    display: flex;
+    width: 40px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+
   .list-category {
     margin-left: 58px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
 
     &__item {
       display: flex;
@@ -384,4 +396,8 @@
       }
     }
   }
+}
+
+.active::after{
+  content: "\2212" !important;
 }
