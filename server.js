@@ -1,14 +1,21 @@
 const express = require('express');
+const app = express();
 const path = require('path');
-const UserController = require('./controllers/user.controller')
+const mongoose = require('mongoose');
+
+// Route
+const memoRoute = require('./routes/memo.route')
+const categoryRoute = require('./routes/category.route')
+
 
 const PORT = process.env.PORT || 5000;
-const app = express();
 
+const bodyParser = require('body-parser');
 app.use(express.static(__dirname + '/public'));
-app.listen(PORT);
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-const mongoose = require('mongoose');
+
 mongoose.connect('mongodb+srv://phanvannhan98:nhanvanphan004@todoapp-yjktw.mongodb.net/TodoApp?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true}, ()=>{
   console.log('Mongoose!');
 });
@@ -18,4 +25,7 @@ app.get('/home', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/public/index.html'))
 })
 
-app.get('/api', UserController.getAllUser)
+app.use('/api/memo', memoRoute)
+app.use('/api/category', categoryRoute)
+
+app.listen(PORT);
