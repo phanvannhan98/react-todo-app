@@ -9,6 +9,12 @@ export const actGetAllCategory = (data) => {
     }
 }
 
+export const actGetAllCategoryRequest = () => {
+    return (dispath) => {
+        axios.get('/api/category').then(data => dispath(actGetAllCategory(data.data)))
+    }
+}
+
 // Memo
 export const actGetAllMemo = (data) => {
     return {
