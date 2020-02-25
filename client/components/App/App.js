@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import './App.scss';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { SemipolarLoading } from 'react-loadingg';
 import axios from 'axios';
 import Category from '../Category/Category';
+import './App.scss';
+import * as actions from '../../actions/app.actions'
 
 export default () => {
     const [load, setLoad] = useState(true)
     const [listCategory, setListCategory] = useState([])
+    const dispacth = useDispatch()
+
+    const getAllMemo = useCallback(
+        () => dispacth(actions.actGetAllMemoRequest()),
+        [dispacth]
+    )
+
+    const memotest = useSelector(state => state.memo)
+    // getAllMemo()
 
     useEffect(() => {
         axios.get('/api/category').then((data) => { console.log(data); setListCategory(data.data) })
@@ -15,10 +26,13 @@ export default () => {
 
     return (
         <>
-            {load ? <><div style={{background: 'rgb(195, 66, 191)', opacity: 0.3,position:'absolute', width: '100%', height: '100%'}}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
+            {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%' }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
             <div className="wrapper" style={load ? { opacity: 1 } : {}}>
                 <div className="sidebar">
-                    <a className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
+                    <a onClick={(e)=>{
+                        e.preventDefault();
+                        getAllMemo()
+                    }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
                         <li>
                             <a className="all-notes" href="/">
@@ -30,11 +44,11 @@ export default () => {
                             </a>
                         </li>
                         <li>
-                            <a className="category-btn" href="/" onClick={(e)=>{
+                            <a className="category-btn" href="/" onClick={(e) => {
                                 e.preventDefault();
                                 var z = document.getElementsByClassName('list-category')[0];
-                                
-                                z.style.maxHeight = z.style.maxHeight ?  null : z.scrollHeight + "px" ;
+
+                                z.style.maxHeight = z.style.maxHeight ? null : z.scrollHeight + "px";
                                 e.currentTarget.classList.toggle('active')
                             }}>
                                 <div className="icon-title">
@@ -70,7 +84,7 @@ export default () => {
                                 <input type="text" placeholder="キーワードを入力" />
                             </div>
                             <div className="primary-view__list-todo__search__img-wrapper">
-                                <img src="./images/search-solid.svg" alt="" onClick={() => console.log("oke")} />
+                                <img src="./images/search-solid.svg" alt=""/>
                             </div>
                         </div>
                         <div className="primary-view__list-todo__sort-title">

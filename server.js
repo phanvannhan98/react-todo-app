@@ -13,7 +13,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-mongoose.connect('mongodb+srv://phanvannhan98:nhanvanphan004@todoapp-yjktw.mongodb.net/TodoApp?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true}, ()=>{
+mongoose.connect('mongodb+srv://phanvannhan98:nhanvanphan004@todoapp-yjktw.mongodb.net/TodoApp?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
   console.log('Mongoose!');
 });
 

@@ -1,12 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './components/App/App.js';
-// import A from './components/App/FuturaPTMedium.otf';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux'
+import thunk from 'redux-thunk';
+import appReducers from './reducers/app.reducers';
 
-// console.log(A);
+const store = createStore(appReducers, applyMiddleware(thunk))
 
-
-render (
-  <App/>,
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )

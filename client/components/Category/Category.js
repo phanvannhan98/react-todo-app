@@ -3,11 +3,12 @@ import { SemipolarLoading } from 'react-loadingg';
 import axios from 'axios';
 
 export default (props) => {
-    console.log(props.listCategory);
-    
+
     const showCategory = () => {
-        return props.listCategory.map((value,index) => (
-            <li key={index}>
+        return props.listCategory.map((value, index) => (
+            <li key={index} onClick={(e) => {
+                e.preventDefault();
+            }}>
                 <a href="/" className="list-category__item">
                     <div className="icon-title">
                         <img src="/images/tags-solid.svg" alt="x" />

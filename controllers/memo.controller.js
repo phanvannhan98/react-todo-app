@@ -1,7 +1,7 @@
 const Memo = require('../models/memo.model')
 
 module.exports.getAllMemo = async (req, res) => {
-    
+
     // title: String,
     // name: String,
     // content: String,
@@ -20,8 +20,8 @@ module.exports.getAllMemo = async (req, res) => {
     // })
 
     // memo.save().then((a) => console.log(a)).catch((b)=>console.log(b))
-    
-    Memo.find().populate('category').exec().then((doc)=>{
+
+    Memo.find().populate('category').exec().then((doc) => {
         res.send(doc)
     })
 }
@@ -29,10 +29,21 @@ module.exports.getAllMemo = async (req, res) => {
 module.exports.getOneMemo = async (req, res) => {
     var id = req.params.id;
     console.log(id);
-    
-    var data = await Memo.findOne({_id: id}).exec().catch(err => []);
+
+    var data = await Memo.findOne({ _id: id }).exec().catch(err => []);
     console.log(data);
-    
+
+    res.send(data);
+
+}
+
+module.exports.getMemoGroupByIDCategory = async (req, res) => {
+    var id = req.params.id;
+    console.log(id);
+
+    var data = await Memo.findOne({ category: id }).exec().catch(err => []);
+    console.log(data);
+
     res.send(data);
 
 }
