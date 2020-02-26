@@ -1,16 +1,19 @@
 import React, {  } from 'react';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import * as Actions from '../../actions/app.actions'
 
 export default (props) => {
     const dispatch = useDispatch();
+
+    const idMemoClicked = useSelector(state => state.idMemoClicked)
+
     const showMemoList = () => {
         return props.listMemo.map((value)=>
             (<li key={value._id} onClick={()=>{
                 dispatch(Actions.actSetIdMemoClicked(value._id))
             }}>
-                <button>
+                <button className={value._id === idMemoClicked ? 'activeMemo' : ''}>
                     <div>
                         <h3>{value.title}</h3>
                         <div className="wrapper-date-category">

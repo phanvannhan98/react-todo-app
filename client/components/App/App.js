@@ -10,6 +10,7 @@ import './App.scss';
 
 export default () => {
     const [load, setLoad] = useState(true);
+    const [isClip, setIsClip] = useState(false);
     const dispacth = useDispatch()
 
     const getAllCategory = useCallback(
@@ -26,11 +27,6 @@ export default () => {
     const idMemoClicked = useSelector(state => state.idMemoClicked)
     const idCategoryClicked = useSelector(state => state.idCategoryClicked)
 
-    console.log('idMemoClicked', idMemoClicked);
-    console.log('idCategory', idCategoryClicked);
-
-
-
     useEffect(() => {
         getAllMemo()
         getAllCategory()
@@ -42,9 +38,13 @@ export default () => {
         }, 300);
     }
 
+
+
     if (listMemo.length && idCategoryClicked) {
         listMemo = listMemo.filter(value => value.category._id === idCategoryClicked)
     }
+
+    listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
 
     return (
         <>
@@ -56,12 +56,13 @@ export default () => {
                         getAllMemo()
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
-                        <li 
-                            className="all-notes"
-                            onClick={(e)=>{
+                        <li
+                            className={idCategoryClicked || isClip ? "all-notes" : "all-notes activeCategory"}
+                            onClick={(e) => {
                                 dispacth(actions.actSetIdCategoryClicked(''))
                                 dispacth(actions.actSetIdMemoClicked(''))
-                            }}    
+                                setIsClip(false)
+                            }}
                         >
                             <div className="icon-title" >
                                 <img src="/images/sticky-note-solid.svg" alt="x" />
@@ -84,14 +85,15 @@ export default () => {
                             </a>
                             <Category listCategory={listCategory} />
                         </li>
-                        <li>
-                            <a className="clip-btn" href="/">
-                                <div className="icon-title">
-                                    <img src="/images/paperclip-solid-1.svg" alt="x" />
-                                    <span>Clip</span>
-                                </div>
-                                <span className="post-number">10</span>
-                            </a>
+                        <li 
+                            className={isClip ? "all-notes clip activeCategory" : "all-notes clip"}
+                            onClick = {e => setIsClip(!isClip)}
+                        >
+                            <div className="icon-title">
+                                <img src="/images/paperclip-solid-1.svg" alt="x" />
+                                <span>Clip</span>
+                            </div>
+                            <span className="post-number">10</span>
                         </li>
                         <li>
                             <a className="clip-btn deleted-btn" href="/">
