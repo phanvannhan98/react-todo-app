@@ -1,12 +1,15 @@
 import React, {  } from 'react';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import * as Actions from '../../actions/app.actions'
 
 export default (props) => {
-    console.log('memolist', props.listMemo);
-
+    const dispatch = useDispatch();
     const showMemoList = () => {
         return props.listMemo.map((value)=>
-            (<li key={value._id}>
+            (<li key={value._id} onClick={()=>{
+                dispatch(Actions.actSetIdMemoClicked(value._id))
+            }}>
                 <button>
                     <div>
                         <h3>{value.title}</h3>
@@ -21,9 +24,9 @@ export default (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className="wrapper-icon-tag">
+                    {value.isClip ? <div className="wrapper-icon-tag">
                         <img src="./images/paperclip-solid-2.svg" alt="" />
-                    </div>
+                    </div> : ''}
                 </button>
             </li>)
         )

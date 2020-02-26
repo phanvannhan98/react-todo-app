@@ -9,7 +9,7 @@ import * as actions from '../../actions/app.actions';
 import './App.scss';
 
 export default () => {
-    const [load, setLoad] = useState(true)
+    const [load, setLoad] = useState(true);
     const dispacth = useDispatch()
 
     const getAllCategory = useCallback(
@@ -22,35 +22,52 @@ export default () => {
     )
 
     const listCategory = useSelector(state => state.category)
-    const listMemo = useSelector(state => state.memo)
+    let listMemo = useSelector(state => state.memo)
+    const idMemoClicked = useSelector(state => state.idMemoClicked)
+    const idCategoryClicked = useSelector(state => state.idCategoryClicked)
 
-    console.log(listCategory);
-    console.log(listMemo);
-    
+    console.log('idMemoClicked', idMemoClicked);
+    console.log('idCategory', idCategoryClicked);
+
+
+
     useEffect(() => {
         getAllMemo()
         getAllCategory()
-        setTimeout(() => setLoad(false), 1000)
     }, [])
+
+    if (listMemo.length && load) {
+        setTimeout(() => {
+            setLoad(false)
+        }, 300);
+    }
+
+    if (listMemo.length && idCategoryClicked) {
+        listMemo = listMemo.filter(value => value.category._id === idCategoryClicked)
+    }
 
     return (
         <>
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%' }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
             <div className="wrapper" style={load ? { opacity: 1 } : {}}>
                 <div className="sidebar">
-                    <a onClick={(e)=>{
+                    <a onClick={(e) => {
                         e.preventDefault();
                         getAllMemo()
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
-                        <li>
-                            <a className="all-notes" href="/">
-                                <div className="icon-title" >
-                                    <img src="/images/sticky-note-solid.svg" alt="x" />
-                                    <span>All Notes</span>
-                                </div>
-                                <span className="post-number">10</span>
-                            </a>
+                        <li 
+                            className="all-notes"
+                            onClick={(e)=>{
+                                dispacth(actions.actSetIdCategoryClicked(''))
+                                dispacth(actions.actSetIdMemoClicked(''))
+                            }}    
+                        >
+                            <div className="icon-title" >
+                                <img src="/images/sticky-note-solid.svg" alt="x" />
+                                <span>All Notes</span>
+                            </div>
+                            <span className="post-number">10</span>
                         </li>
                         <li>
                             <a className="category-btn" href="/" onClick={(e) => {
@@ -93,7 +110,7 @@ export default () => {
                                 <input type="text" placeholder="キーワードを入力" />
                             </div>
                             <div className="primary-view__list-todo__search__img-wrapper">
-                                <img src="./images/search-solid.svg" alt=""/>
+                                <img src="./images/search-solid.svg" alt="" />
                             </div>
                         </div>
                         <div className="primary-view__list-todo__sort-title">
@@ -102,7 +119,7 @@ export default () => {
                                 <img src="./images/sort-amount-up-alt-solid.svg" alt="" />
                             </div>
                         </div>
-                        <MemoList listMemo={listMemo}/>
+                        <MemoList listMemo={listMemo} />
                     </div>
                     <div className="primary-view__todo-info">
                         <div className="action-area">
@@ -121,7 +138,7 @@ export default () => {
                             </button>
                             </div>
                         </div>
-                        <MemoContent />
+                        <MemoContent listMemo={listMemo} />
                     </div>
                 </div>
             </div>

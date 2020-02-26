@@ -11,7 +11,9 @@ export const actGetAllCategory = (data) => {
 
 export const actGetAllCategoryRequest = () => {
     return (dispath) => {
-        axios.get('/api/category').then(data => dispath(actGetAllCategory(data.data)))
+        axios.get('/api/category').then(data => {
+            dispath(actGetAllCategory(data.data));
+        })
     }
 }
 
@@ -25,6 +27,24 @@ export const actGetAllMemo = (data) => {
 
 export const actGetAllMemoRequest = () => {
     return (dispath) => {
-        axios.get('/api/memo').then(data => dispath(actGetAllMemo(data.data)))
+        axios.get('/api/memo').then(data => {
+            dispath(actGetAllMemo(data.data));
+        })
+    }
+}
+
+// idMemoClicked
+export const actSetIdMemoClicked = (data) => {
+    return {
+        type: Types.SET_IDMEMO_CLICKED,
+        data
+    }
+}
+
+// idCategoryClicked
+export const actSetIdCategoryClicked = (data) => {
+    return {
+        type: Types.SET_IDCATEGORY_CLICKED,
+        data
     }
 }
