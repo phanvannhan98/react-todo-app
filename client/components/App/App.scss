@@ -352,7 +352,13 @@
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
+        transition: 0.3s;
+        outline: none;
 
+        &:hover{
+          background-color: #ffeb3b45 !important;
+        }
+        
         img {
           margin-right: 6px;
         }
@@ -365,6 +371,7 @@
         img {
           margin-right: 0;
         }
+
       }
 
       .wrapper-btn-delete {
@@ -376,6 +383,10 @@
           background-color: #313f46;
           width: 100px;
           color: #fff;
+
+          &:hover{
+            background-color: #395d6fd6 !important;
+          }
         }
       }
     }

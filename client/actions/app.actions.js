@@ -33,6 +33,20 @@ export const actGetAllMemoRequest = () => {
     }
 }
 
+export const actUpdateMemoItem = (data) => {
+    return {
+        type: Types.UPDATE_MEMO_ITEM,
+        data
+    }
+}
+
+export const actUpdateMemoItemRequest = (data) => {
+    return (dispath) => {
+        dispath(actUpdateMemoItem(data));
+        axios.patch('/api/memo', data).then(doc => console.log(doc)).catch(err => console.log(err))
+    }
+}
+
 // idMemoClicked
 export const actSetIdMemoClicked = (data) => {
     return {

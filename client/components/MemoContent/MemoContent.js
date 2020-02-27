@@ -22,6 +22,7 @@ export default (props) => {
             dispatch(Actions.actSetIdMemoClicked(''))
         }
     }
+    console.log(memo);
     
     if (memo)
         return (

@@ -18,6 +18,7 @@ export default () => {
         () => dispacth(actions.actGetAllCategoryRequest()),
         [dispacth]
     )
+    
     const getAllMemo = useCallback(
         () => dispacth(actions.actGetAllMemoRequest()),
         [dispacth]
@@ -34,7 +35,6 @@ export default () => {
     }, [])
 
     if (listMemo.length && load) {
-        
         setTimeout(() => {
             setLoad(false)
         }, 300);
@@ -46,7 +46,7 @@ export default () => {
 
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
     isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) : listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
-    
+
     return (
         <>
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%' }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
@@ -54,7 +54,8 @@ export default () => {
                 <div className="sidebar">
                     <a onClick={(e) => {
                         e.preventDefault();
-                        getAllMemo()
+                        // dispacth(actions.actUpdateMemoItem(a))
+                        // getAllMemo()
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
                         <li
@@ -134,7 +135,13 @@ export default () => {
                             <button className="btn btn-save">
                                 <img src="./images/save-solid.svg" alt="" /> Save
                             </button>
-                            <button className="btn btn-clip">
+                            <button className="btn btn-clip"
+                                onClick={() => {
+                                    let memo = listMemo.find(v => v._id === idMemoClicked);
+                                    memo.isClip = !memo.isClip;
+                                    dispacth(actions.actUpdateMemoItemRequest(memo))
+                                }}
+                            >
                                 <img src="./images/paperclip-solid.svg" alt="" /> Clip
                             </button>
                             <div className="wrapper-btn-delete">

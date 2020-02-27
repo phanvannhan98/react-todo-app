@@ -1,4 +1,5 @@
 const Memo = require('../models/memo.model')
+var convertToObjectId = require('mongodb').ObjectId;
 
 module.exports.getAllMemo = async (req, res) => {
 
@@ -49,3 +50,23 @@ module.exports.getMemoGroupByIDCategory = async (req, res) => {
     res.send(data);
 
 }
+
+module.exports.updateMemo = async (req, res) => {
+    let data = req.body;
+    Memo.find({ _id: convertToObjectId(data._id) })
+        .updateOne({ $set: data })
+        .exec()
+        .then(result => {
+            if (result) {
+                console.log(result);
+                
+                res.send(result)
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+}
+
