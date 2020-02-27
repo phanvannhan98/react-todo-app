@@ -12,13 +12,14 @@ export default () => {
     const [load, setLoad] = useState(true);
     const [isClip, setIsClip] = useState(false);
     const [isSortDate, setIsSortDate] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
     const dispacth = useDispatch()
 
     const getAllCategory = useCallback(
         () => dispacth(actions.actGetAllCategoryRequest()),
         [dispacth]
     )
-    
+
     const getAllMemo = useCallback(
         () => dispacth(actions.actGetAllMemoRequest()),
         [dispacth]
@@ -40,12 +41,17 @@ export default () => {
         }, 300);
     }
 
+    let numAllNote = useSelector(state => state.memo).filter(v => !v.dateDeleted)
+    console.log(numAllNote)
+
+    listMemo = isDeleted ? listMemo.filter(value => value.dateDeleted) : listMemo.filter(value => !value.dateDeleted)
     if (listMemo.length && idCategoryClicked) {
         listMemo = listMemo.filter(value => value.category._id === idCategoryClicked)
     }
 
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
-    isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) : listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
+    isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) :
+    listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
 
     return (
         <>
@@ -59,18 +65,19 @@ export default () => {
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></a>
                     <ul>
                         <li
-                            className={idCategoryClicked || isClip ? "all-notes" : "all-notes activeCategory"}
+                            className={idCategoryClicked || isClip || isDeleted ? "siderbar__li-item" : "siderbar__li-item activeCategory"}
                             onClick={(e) => {
                                 dispacth(actions.actSetIdCategoryClicked(''))
                                 dispacth(actions.actSetIdMemoClicked(''))
                                 setIsClip(false)
+                                setIsDeleted(false)
                             }}
                         >
                             <div className="icon-title" >
                                 <img src="/images/sticky-note-solid.svg" alt="x" />
                                 <span>All Notes</span>
                             </div>
-                            <span className="post-number">10</span>
+                        <span className="post-number">{numAllNote.length}</span>
                         </li>
                         <li>
                             <a className="category-btn" href="/" onClick={(e) => {
@@ -85,25 +92,27 @@ export default () => {
                                     <span>Category</span>
                                 </div>
                             </a>
-                            <Category listCategory={listCategory} />
+                            <Category listCategory={listCategory} isClip={isClip} isDeleted={isDeleted}/>
                         </li>
                         <li
-                            className={isClip ? "all-notes clip activeCategory" : "all-notes clip"}
-                            onClick={e => setIsClip(!isClip)}
+                            className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
+                            onClick={e => {setIsClip(!isClip)}}
                         >
                             <div className="icon-title">
                                 <img src="/images/paperclip-solid-1.svg" alt="x" />
                                 <span>Clip</span>
                             </div>
-                            <span className="post-number">10</span>
+                            <span className="post-number">{listMemo.filter(v => v.isClip).length}</span>
                         </li>
                         <li>
-                            <a className="clip-btn deleted-btn" href="/">
-                                <div className="icon-title">
+                            <div className="wrapper-deleted">
+                                <div className={`wrapper-deleted__btn-deleted siderbar__li-item ${isDeleted ? 'activeCategory' : ''} `}
+                                    onClick={() => {setIsDeleted(!isDeleted); setIsClip(false)}}
+                                >
                                     <img src="./images/trash-solid.svg" alt="x" />
                                     <span>Delete</span>
                                 </div>
-                            </a>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -145,7 +154,11 @@ export default () => {
                                 <img src="./images/paperclip-solid.svg" alt="" /> Clip
                             </button>
                             <div className="wrapper-btn-delete">
-                                <button className="btn btn-delete">
+                                <button className="btn btn-delete" onClick={() => {
+                                    let memo = listMemo.find(v => v._id === idMemoClicked);
+                                    memo.dateDeleted = memo.dateDeleted ? memo.dateDeleted : new Date();
+                                    dispacth(actions.actUpdateMemoItemRequest(memo))
+                                }}>
                                     <img src="./images/trash-solid.svg" alt="" /> Delete
                             </button>
                             </div>

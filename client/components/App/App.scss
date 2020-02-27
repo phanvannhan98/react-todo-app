@@ -39,7 +39,7 @@
   }
 
   .create-new-btn,
-  .all-notes {
+  .siderbar__li-item {
     display: flex;
     width: 270px;
     height: 50px;
@@ -71,7 +71,7 @@
     margin-left: 13px;
   }
 
-  .all-notes {
+  .siderbar__li-item {
     background-color: #313f46;
     color: #fff;
     justify-content: space-between;
@@ -135,6 +135,17 @@
 
     li:last-child {
       margin-bottom: 15px;
+    }
+  }
+
+  .wrapper-deleted{
+    height: 80px;
+    display: flex;
+    align-items: center;
+
+    &__btn-deleted{
+      margin-bottom: 0;
+      justify-content: left;
     }
   }
 
@@ -263,11 +274,14 @@
           align-items: center;
           cursor: pointer;
 
-          &:hover,
-          &:focus {
+          &:hover {
             border-left: 5px solid #fe6100;
             box-sizing: border-box;
             background: rgba(254, 97, 0, 0.1);
+            outline: rgba(254, 97, 0, 0.5);
+          }
+
+          &:focus {
             outline: rgba(254, 97, 0, 0.5);
           }
 
