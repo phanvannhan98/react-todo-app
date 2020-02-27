@@ -1,16 +1,28 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import * as Actions from '../../actions/app.actions'
 
 export default (props) => {
 
     const idMemoClicked = useSelector(state => state.idMemoClicked);
     const listMemo = props.listMemo;
+
+    const dispatch = useDispatch();
+
     let memo;
     if (listMemo.length) {
         memo = listMemo.find(value => value._id === idMemoClicked) || listMemo[0];
-    }
 
+        if(!idMemoClicked || memo._id !== idMemoClicked){
+            dispatch(Actions.actSetIdMemoClicked(memo._id))
+        }
+    }else{
+        if(idMemoClicked){
+            dispatch(Actions.actSetIdMemoClicked(''))
+        }
+    }
+    
     if (memo)
         return (
             <div className="todo-info-area">

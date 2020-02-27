@@ -11,6 +11,7 @@ import './App.scss';
 export default () => {
     const [load, setLoad] = useState(true);
     const [isClip, setIsClip] = useState(false);
+    const [isSortDate, setIsSortDate] = useState(false);
     const dispacth = useDispatch()
 
     const getAllCategory = useCallback(
@@ -33,19 +34,19 @@ export default () => {
     }, [])
 
     if (listMemo.length && load) {
+        
         setTimeout(() => {
             setLoad(false)
         }, 300);
     }
-
-
 
     if (listMemo.length && idCategoryClicked) {
         listMemo = listMemo.filter(value => value.category._id === idCategoryClicked)
     }
 
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
-
+    isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) : listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
+    
     return (
         <>
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%' }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
@@ -85,9 +86,9 @@ export default () => {
                             </a>
                             <Category listCategory={listCategory} />
                         </li>
-                        <li 
+                        <li
                             className={isClip ? "all-notes clip activeCategory" : "all-notes clip"}
-                            onClick = {e => setIsClip(!isClip)}
+                            onClick={e => setIsClip(!isClip)}
                         >
                             <div className="icon-title">
                                 <img src="/images/paperclip-solid-1.svg" alt="x" />
@@ -117,8 +118,10 @@ export default () => {
                         </div>
                         <div className="primary-view__list-todo__sort-title">
                             <h2 className="primary-view__list-todo__sort-title__title">Title</h2>
-                            <div className="primary-view__list-todo__sort-title__wrapper-icon-sort">
-                                <img src="./images/sort-amount-up-alt-solid.svg" alt="" />
+                            <div className="primary-view__list-todo__sort-title__wrapper-icon-sort"
+                                onClick={() => setIsSortDate(!isSortDate)}
+                            >
+                                <img src={!isSortDate ? "./images/sort-amount-up-alt-solid.svg" : "./images/sort-amount-down-solid.svg"} alt="" />
                             </div>
                         </div>
                         <MemoList listMemo={listMemo} />

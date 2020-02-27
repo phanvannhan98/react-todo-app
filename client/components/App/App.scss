@@ -4,6 +4,12 @@
   font-family: "futura pt";
   display: flex;
   transition: 0.3s;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently */
 }
 
 .sidebar {
@@ -230,6 +236,14 @@
         opacity: 0.8;
         font-size: 18px;
       }
+
+      &__wrapper-icon-sort {
+        cursor: pointer;
+
+        img {
+          width: 20px;
+        }
+      }
     }
 
     &__todos {
@@ -368,6 +382,7 @@
 
     .todo-info-area {
       padding: 30px 30px 0 40px;
+      user-select: text;
 
       .wrapper-date-category {
         display: flex;
@@ -385,12 +400,20 @@
           display: flex;
           align-items: center;
           justify-content: center;
+
+          span::selection {
+            background-color: rgba(254, 97, 0, 0.4);
+          }
         }
 
         &__category {
           display: flex;
           align-items: center;
           justify-content: center;
+
+          span::selection {
+            background-color: rgba(254, 97, 0, 0.4);
+          }
         }
       }
 
@@ -402,6 +425,10 @@
         color: #2b3137;
         margin-bottom: 10px;
         border-bottom: 1px solid rgba(240, 240, 240, 0.8);
+
+        &::selection {
+          background-color: rgba(254, 97, 0, 0.4);
+        }
       }
 
       &__content {
@@ -410,6 +437,10 @@
         font-size: 16px;
         font-family: "futura pt";
         color: #2b3137;
+
+        &::selection {
+          background-color: rgba(254, 97, 0, 0.4);
+        }
       }
     }
   }
