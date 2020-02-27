@@ -47,5 +47,6 @@ module.exports = {
     maxEntrypointSize: 512000,
     maxAssetSize: 512000
   },
-  mode: 'none'
+  optimization: {},
+  mode: 'production'
 }
