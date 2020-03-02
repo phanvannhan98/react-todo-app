@@ -17,11 +17,11 @@ mongoose.connect('mongodb+srv://phanvannhan98:nhanvanphan004@todoapp-yjktw.mongo
   console.log('Mongoose!');
 });
 
+app.use('/api/memo', memoRoute)
+app.use('/api/category', categoryRoute)
+
 app.get('/home', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/public/index.html'))
 })
-
-app.use('/api/memo', memoRoute)
-app.use('/api/category', categoryRoute)
 
 app.listen(PORT);
