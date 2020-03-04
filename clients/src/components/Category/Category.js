@@ -1,6 +1,6 @@
 import React from 'react';
-import { SemipolarLoading } from 'react-loadingg';
-import { useDispatch,useSelector } from 'react-redux';
+// import { SemipolarLoading } from 'react-loadingg';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from '../../actions/app.actions'
 
 export default (props) => {
@@ -12,7 +12,7 @@ export default (props) => {
 
     listMemo = isDeleted ? listMemo.filter(v => v.dateDeleted) : listMemo.filter(v => !v.dateDeleted)
     listMemo = isClip ? listMemo.filter(v => v.isClip) : listMemo;
-    
+
     const idCategoryClicked = useSelector(state => state.idCategoryClicked)
     const showCategory = () => {
         return props.listCategory.map((value) => (
@@ -20,6 +20,7 @@ export default (props) => {
                 className={idCategoryClicked === value._id ? "list-category__item activeItem" : "list-category__item"}
                 onClick={e => {
                     dispatch(Actions.actSetIdMemoClicked(''))
+                    props.setIsSearch(false)
                     idCategoryClicked === value._id ? dispatch(Actions.actSetIdCategoryClicked('')) : dispatch(Actions.actSetIdCategoryClicked(value._id));
                 }}>
 

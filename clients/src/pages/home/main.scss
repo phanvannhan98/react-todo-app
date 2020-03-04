@@ -1,4 +1,76 @@
 @import "./reset.scss";
+
+@font-face {
+  font-family: "futura pt";
+  src: url("/fonts/FuturaPTMedium.otf");
+}
+
+@font-face {
+  font-family: "futura pt book";
+  src: url("/fonts/FuturaPTBook.otf");
+}
+
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("/fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Medium;
+  src: url("/fonts/Poppins-Medium.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("/fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url("/fonts/Poppins-SemiBold.ttf");
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #313f46; 
+  border-radius: 0;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #40545f;
+}
+
+
+#scroll-text::-webkit-scrollbar-track
+{
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#scroll-text::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#scroll-text::-webkit-scrollbar-thumb
+{
+	background: #313f46; 
+}
+
+
 .wrapper {
   width: 100%;
   font-family: "futura pt";
@@ -138,12 +210,12 @@
     }
   }
 
-  .wrapper-deleted{
+  .wrapper-deleted {
     height: 80px;
     display: flex;
     align-items: center;
 
-    &__btn-deleted{
+    &__btn-deleted {
       margin-bottom: 0;
       justify-content: left;
     }
@@ -195,7 +267,7 @@
         align-items: center;
         overflow: hidden;
 
-        input {
+        >input {
           width: 96%;
           height: 95%;
           outline: none;
@@ -369,10 +441,10 @@
         transition: 0.3s;
         outline: none;
 
-        &:hover{
+        &:hover {
           background-color: #ffeb3b45 !important;
         }
-        
+
         img {
           margin-right: 6px;
         }
@@ -385,7 +457,6 @@
         img {
           margin-right: 0;
         }
-
       }
 
       .wrapper-btn-delete {
@@ -398,7 +469,7 @@
           width: 100px;
           color: #fff;
 
-          &:hover{
+          &:hover {
             background-color: #395d6fd6 !important;
           }
         }

@@ -1,30 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { SemipolarLoading } from 'react-loadingg';
-import axios from 'axios';
 import Category from '../../components/Category/Category';
 import MemoList from '../../components/MemoList/MemoList';
 import MemoContent from '../../components/MemoContent/MemoContent';
 import * as actions from '../../actions/app.actions';
 import './main.scss';
-import {Redirect, Link} from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom';
+import CallAPI from '../../utils/apiCaller';
 
 export default () => {
     const [load, setLoad] = useState(true);
     const [isClip, setIsClip] = useState(false);
     const [isSortDate, setIsSortDate] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
-    const dispacth = useDispatch()
+    const [searchTxt, setSearchTxt] = useState('');
+    const [isSearch, setIsSearch] = useState(false);
+    const [isEdit, setIsEdit] = useState(false)
 
-    const getAllCategory = useCallback(
-        () => dispacth(actions.actGetAllCategoryRequest()),
-        [dispacth]
-    )
+    const [isRedirect, setIsRedirect] = useState('')
 
-    const getAllMemo = useCallback(
-        () => dispacth(actions.actGetAllMemoRequest()),
-        [dispacth]
-    )
+    const dispatch = useDispatch()
 
     const listCategory = useSelector(state => state.category)
     let listMemo = useSelector(state => state.memo)
@@ -32,8 +28,20 @@ export default () => {
     const idCategoryClicked = useSelector(state => state.idCategoryClicked)
 
     useEffect(() => {
-        getAllMemo()
-        getAllCategory()
+
+        CallAPI('/api/login/checktoken', 'POST').then(doc => {
+            setIsRedirect(!doc.data)
+            if(doc.data){
+                dispatch(actions.actGetAllMemoRequest())
+                dispatch(actions.actGetAllCategoryRequest())
+                dispatch(actions.actSetIdCategoryClicked(''))
+                dispatch(actions.actSetIdMemoClicked(''))
+                setTimeout(() => {
+                    setLoad(false)
+                }, 1500);
+            }
+        })
+
     }, [])
 
     if (listMemo.length && load) {
@@ -43,7 +51,6 @@ export default () => {
     }
 
     let numAllNote = useSelector(state => state.memo).filter(v => !v.dateDeleted)
-    console.log(numAllNote)
 
     listMemo = isDeleted ? listMemo.filter(value => value.dateDeleted) : listMemo.filter(value => !value.dateDeleted)
     if (listMemo.length && idCategoryClicked) {
@@ -52,35 +59,40 @@ export default () => {
 
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
     isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) :
-    listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
+        listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
+
+    if (isSearch) {
+        listMemo = numAllNote.filter(v => v.name.toLowerCase().includes(searchTxt.toLowerCase()))
+    }
+
+
+    if (isRedirect) {
+        return <Redirect to='/login' />
+    }
 
     return (
         <>
-            {/* <Redirect to="/login"/> */}
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%' }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
             <div className="wrapper" style={load ? { opacity: 1 } : {}}>
                 <div className="sidebar">
                     <Link to="/login" onClick={(e) => {
-                        // e.preventDefault();
-                        
-                        // dispacth(actions.actUpdateMemoItem(a))
-                        // getAllMemo()
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></Link>
                     <ul>
                         <li
-                            className={idCategoryClicked || isClip || isDeleted ? "siderbar__li-item" : "siderbar__li-item activeCategory"}
+                            className={idCategoryClicked || isClip || isDeleted || isSearch ? "siderbar__li-item" : "siderbar__li-item activeCategory"}
                             onClick={(e) => {
-                                dispacth(actions.actSetIdCategoryClicked(''))
-                                dispacth(actions.actSetIdMemoClicked(''))
+                                dispatch(actions.actSetIdCategoryClicked(''))
+                                dispatch(actions.actSetIdMemoClicked(''))
                                 setIsClip(false)
                                 setIsDeleted(false)
+                                setIsSearch(false)
                             }}
                         >
                             <div className="icon-title" >
                                 <img src="/images/sticky-note-solid.svg" alt="x" />
                                 <span>All Notes</span>
                             </div>
-                        <span className="post-number">{numAllNote.length}</span>
+                            <span className="post-number">{numAllNote.length}</span>
                         </li>
                         <li>
                             <a className="category-btn" href="/" onClick={(e) => {
@@ -95,11 +107,11 @@ export default () => {
                                     <span>Category</span>
                                 </div>
                             </a>
-                            <Category listCategory={listCategory} isClip={isClip} isDeleted={isDeleted}/>
+                            <Category listCategory={listCategory} isClip={isClip} isDeleted={isDeleted} setIsSearch={setIsSearch} />
                         </li>
                         <li
                             className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
-                            onClick={e => {setIsClip(!isClip)}}
+                            onClick={e => { setIsClip(!isClip) }}
                         >
                             <div className="icon-title">
                                 <img src="/images/paperclip-solid-1.svg" alt="x" />
@@ -110,7 +122,7 @@ export default () => {
                         <li>
                             <div className="wrapper-deleted">
                                 <div className={`wrapper-deleted__btn-deleted siderbar__li-item ${isDeleted ? 'activeCategory' : ''} `}
-                                    onClick={() => {setIsDeleted(!isDeleted); setIsClip(false)}}
+                                    onClick={() => { setIsDeleted(!isDeleted); setIsClip(false) }}
                                 >
                                     <img src="./images/trash-solid.svg" alt="x" />
                                     <span>Delete</span>
@@ -121,57 +133,73 @@ export default () => {
                 </div>
                 <div className="primary-view">
                     <div className="primary-view__list-todo">
-                        <div className="primary-view__list-todo__search">
-                            <div className="primary-view__list-todo__search__input-wrapper">
-                                <input type="text" placeholder="キーワードを入力" />
+                        <form onSubmit={(e) => { e.preventDefault(); setIsSearch(true) }}>
+                            <div className="primary-view__list-todo__search">
+                                <div className="primary-view__list-todo__search__input-wrapper">
+                                    <input
+                                        type="text"
+                                        placeholder="キーワードを入力"
+                                        onChange={e => { setSearchTxt(e.currentTarget.value); setIsSearch(false) }}
+                                    />
+                                </div>
+                                <div className="primary-view__list-todo__search__img-wrapper"
+                                    onClick={() => {
+                                        setIsSearch(true); 
+                                        dispatch(actions.actSetIdCategoryClicked('')); 
+                                        setIsClip(false)
+                                        setIsDeleted(false)
+                                    }}
+                                >
+                                    <img src="./images/search-solid.svg" alt="x" />
+                                </div>
                             </div>
-                            <div className="primary-view__list-todo__search__img-wrapper">
-                                <img src="./images/search-solid.svg" alt="" />
-                            </div>
-                        </div>
+                        </form>
                         <div className="primary-view__list-todo__sort-title">
                             <h2 className="primary-view__list-todo__sort-title__title">Title</h2>
                             <div className="primary-view__list-todo__sort-title__wrapper-icon-sort"
                                 onClick={() => setIsSortDate(!isSortDate)}
                             >
-                                <img src={!isSortDate ? "./images/sort-amount-up-alt-solid.svg" : "./images/sort-amount-down-solid.svg"} alt="" />
+                                <img src={!isSortDate ? "./images/sort-amount-up-alt-solid.svg" : "./images/sort-amount-down-solid.svg"} alt="x" />
                             </div>
                         </div>
-                        <MemoList listMemo={listMemo} />
+                        {listMemo.length ? <MemoList listMemo={listMemo} /> : ''}
                     </div>
                     <div className="primary-view__todo-info">
                         <div className="action-area">
-                            <button className="btn btn-edit">
-                                <img src="./images/pen-solid.svg" alt="" /> Edit
+                            <button 
+                                className="btn btn-edit"
+                                onClick={() => {setIsEdit(!isEdit)}}
+                            >
+                                <img src="./images/pen-solid.svg" alt="x" /> Edit
                             </button>
                             <button className="btn btn-save">
-                                <img src="./images/save-solid.svg" alt="" /> Save
+                                <img src="./images/save-solid.svg" alt="x" /> Save
                             </button>
                             <button className="btn btn-clip"
                                 onClick={() => {
                                     let memo = listMemo.find(v => v._id === idMemoClicked);
                                     memo.isClip = !memo.isClip;
-                                    dispacth(actions.actUpdateMemoItemRequest(memo))
+                                    dispatch(actions.actUpdateMemoItemRequest(memo))
                                 }}
                             >
-                                <img src="./images/paperclip-solid.svg" alt="" /> Clip
+                                <img src="./images/paperclip-solid.svg" alt="x" /> Clip
                             </button>
                             <div className="wrapper-btn-delete">
                                 <button className="btn btn-delete" onClick={() => {
                                     let memo = listMemo.find(v => v._id === idMemoClicked);
                                     memo.dateDeleted = memo.dateDeleted ? memo.dateDeleted : new Date();
-                                    dispacth(actions.actUpdateMemoItemRequest(memo))
+                                    dispatch(actions.actUpdateMemoItemRequest(memo))
                                 }}>
-                                    <img src="./images/trash-solid.svg" alt="" /> Delete
+                                    <img src="./images/trash-solid.svg" alt="x" /> Delete
                             </button>
                             </div>
                         </div>
-                        <MemoContent listMemo={listMemo} />
+                        {listMemo.length && listCategory.length ? <MemoContent listMemo={listMemo} listCategory={listCategory} isEdit={isEdit}/> : ''}
                     </div>
                 </div>
             </div>
         </>
-    
+
     )
 
 }

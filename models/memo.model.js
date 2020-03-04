@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const userModel = require('./user.model')
 
 const memo = mongoose.Schema({
     title: String,
@@ -9,6 +10,7 @@ const memo = mongoose.Schema({
     dateEdited: { type: Date, default: null },
     dateDeleted: { type: Date, default: null },
     isClip: Boolean,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: userModel.modelName }
 })
 
 module.exports = mongoose.model('memo', memo);

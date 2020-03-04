@@ -1,3 +1,4 @@
+import * as serviceWorker from './serviceWorker';
 import React from 'react';
 import { render } from 'react-dom';
 import App from './components/App/App.js';
@@ -14,3 +15,4 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+serviceWorker.unregister();

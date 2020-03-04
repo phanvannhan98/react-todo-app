@@ -24,17 +24,15 @@ module.exports.getAllMemo = async (req, res) => {
 
     // memo.save().then((a) => console.log(a)).catch((b)=>console.log(b))
 
-    Memo.find().populate('category').exec().then((doc) => {
+    Memo.find({userId : convertToObjectId(req.userData._id)}).populate('category').exec().then((doc) => {
         res.send(doc)
     })
 }
 
 module.exports.getOneMemo = async (req, res) => {
     var id = req.params.id;
-    console.log(id);
 
     var data = await Memo.findOne({ _id: id }).exec().catch(err => []);
-    console.log(data);
 
     res.send(data);
 
@@ -42,10 +40,8 @@ module.exports.getOneMemo = async (req, res) => {
 
 module.exports.getMemoGroupByIDCategory = async (req, res) => {
     var id = req.params.id;
-    console.log(id);
 
     var data = await Memo.findOne({ category: id }).exec().catch(err => []);
-    console.log(data);
 
     res.send(data);
 
@@ -58,8 +54,6 @@ module.exports.updateMemo = async (req, res) => {
         .exec()
         .then(result => {
             if (result) {
-                console.log(result);
-                
                 res.send(result)
             }
         })

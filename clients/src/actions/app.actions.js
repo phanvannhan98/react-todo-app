@@ -1,5 +1,5 @@
 import * as Types from '../constants/acctionType';
-import axios from 'axios';
+import CallAPI from '../utils/apiCaller';
 
 // Category
 export const actGetAllCategory = (data) => {
@@ -11,7 +11,7 @@ export const actGetAllCategory = (data) => {
 
 export const actGetAllCategoryRequest = () => {
     return (dispath) => {
-        axios.get('/api/category').then(data => {
+        CallAPI('/api/category').then(data => {
             dispath(actGetAllCategory(data.data));
         })
     }
@@ -27,8 +27,11 @@ export const actGetAllMemo = (data) => {
 
 export const actGetAllMemoRequest = () => {
     return (dispath) => {
-        axios.get('/api/memo').then(data => {
+        CallAPI('/api/memo').then(data => {
             dispath(actGetAllMemo(data.data));
+            if(data.data.length){
+                dispath(actSetIdMemoClicked(data.data[0]._id))
+            }
         })
     }
 }
@@ -43,7 +46,7 @@ export const actUpdateMemoItem = (data) => {
 export const actUpdateMemoItemRequest = (data) => {
     return (dispath) => {
         dispath(actUpdateMemoItem(data));
-        axios.patch('/api/memo', data).then(doc => console.log(doc)).catch(err => console.log(err))
+        CallAPI('/api/memo','PATCH', data).then(doc => console.log(doc)).catch(err => console.log(err))
     }
 }
 

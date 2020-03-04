@@ -7,9 +7,13 @@ const mongoose = require('mongoose');
 // Route
 const memoRoute = require('./routes/memo.route')
 const categoryRoute = require('./routes/category.route')
+const loginRoute = require('./routes/login.route')
+
+// CheckToken
+const checkToken = require('./controllers/user.controller')
 
 const bodyParser = require('body-parser');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'clients/build')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -17,11 +21,12 @@ mongoose.connect('mongodb+srv://phanvannhan98:nhanvanphan004@todoapp-yjktw.mongo
   console.log('Mongoose!');
 });
 
-app.use('/api/memo', memoRoute)
-app.use('/api/category', categoryRoute)
+app.use('/api/memo', checkToken.checkTokenMW, memoRoute)
+app.use('/api/category', checkToken.checkTokenMW, categoryRoute)
+app.use('/api/login', loginRoute)
 
-app.get('/home', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/public/index.html'))
-})
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/clients/build/index.html'));
+});
 
 app.listen(PORT);
