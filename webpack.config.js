@@ -1,6 +1,7 @@
 const path = require('path');
 const BUILD_DIR = path.resolve(__dirname, './public/build');
 const APP_DIR = path.resolve(__dirname, './client');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -9,6 +10,9 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: BUILD_DIR
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -48,5 +52,11 @@ module.exports = {
     maxAssetSize: 512000
   },
   optimization: {},
-  mode: 'production'
+  mode: 'none',
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'public/index.html'),
+      filename: 'index.html'
+    })
+  ]
 }
