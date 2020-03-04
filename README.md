@@ -11,13 +11,17 @@ This is a boilerplate project using the following technologies:
 
 ## Running
 
-Install Dependencies
+Install Dependencies Backend
 ```npm install```
-
-Build UI Bundle
-```npm run webpack```
 
 Start Server
 ```npm start```
 
-Visit [localhost:5000](http://localhost:5000/)
+Install Dependencies Frontend
+```cd clients```
+```npm install```
+
+Start Client
+```npm start```
+
+Visit [localhost:3000](http://localhost:3000/)
