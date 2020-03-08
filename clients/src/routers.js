@@ -6,7 +6,7 @@ const routers = [
     {
         path: '/',
         exact: true,
-        main: () => <HomePage />
+        main: ({ history, location }) => <HomePage history={history} location={location} />
     },
     {
         path: '/login',
@@ -18,7 +18,7 @@ const routers = [
         exact: false,
         main: () => <NotFoundPage />
     }
-       
+
 ]
 
 export default routers;

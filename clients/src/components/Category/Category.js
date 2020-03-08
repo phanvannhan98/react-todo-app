@@ -8,19 +8,20 @@ export default (props) => {
 
     let listMemo = useSelector(state => state.memo)
 
-    const { isClip, isDeleted } = props
+    const { isDeleted, setIsSearch, setIsClip, setIsDeleted, listCategory } = props
 
     listMemo = isDeleted ? listMemo.filter(v => v.dateDeleted) : listMemo.filter(v => !v.dateDeleted)
-    listMemo = isClip ? listMemo.filter(v => v.isClip) : listMemo;
 
     const idCategoryClicked = useSelector(state => state.idCategoryClicked)
     const showCategory = () => {
-        return props.listCategory.map((value) => (
+        return listCategory.map((value) => (
             <li key={value._id}
                 className={idCategoryClicked === value._id ? "list-category__item activeItem" : "list-category__item"}
                 onClick={e => {
                     dispatch(Actions.actSetIdMemoClicked(''))
-                    props.setIsSearch(false)
+                    setIsSearch(false)
+                    setIsClip(false)
+                    setIsDeleted(false)
                     idCategoryClicked === value._id ? dispatch(Actions.actSetIdCategoryClicked('')) : dispatch(Actions.actSetIdCategoryClicked(value._id));
                 }}>
 

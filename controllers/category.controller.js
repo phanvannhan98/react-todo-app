@@ -1,4 +1,5 @@
 const Category = require('../models/category.model')
+var convertToObjectId = require('mongodb').ObjectId;
 
 module.exports.getAllCategory = async (req, res) => {
 
@@ -7,7 +8,7 @@ module.exports.getAllCategory = async (req, res) => {
     //     category.save().then((a) => console.log(a)).catch((b)=>console.log(b))
     // }
     
-    var data = await Category.find();
+    var data = await Category.find({userId : convertToObjectId(req.userData._id)});
     res.send(data)
 }
 

@@ -9,7 +9,7 @@ const memo = mongoose.Schema({
     dateCreated: { type: Date, default: Date.now },
     dateEdited: { type: Date, default: null },
     dateDeleted: { type: Date, default: null },
-    isClip: Boolean,
+    isClip: {type: Boolean, default: false},
     userId: { type: mongoose.Schema.Types.ObjectId, ref: userModel.modelName }
 })
 

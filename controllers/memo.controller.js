@@ -64,3 +64,19 @@ module.exports.updateMemo = async (req, res) => {
         })
 }
 
+module.exports.addNewMemo = async (req, res) => {
+    let data = req.body;
+    let user = req.userData;
+    // console.log(data, user)
+    let dataTemp = {...data}
+    dataTemp.userId = user._id;
+    dataTemp.category = data.category._id;
+    let memo = new Memo(dataTemp)
+    memo.save().then((a) => {console.log(a), res.send({...a._doc, category: data.category})}).catch((b)=>console.log(b))
+}
+
+module.exports.deleteMemo = async (req, res) => {
+    let data = req.body;
+    Memo.deleteOne({ _id: convertToObjectId(data._id) }).exec().then(a => res.send('ok')).catch(e => console.log(e))
+}
+

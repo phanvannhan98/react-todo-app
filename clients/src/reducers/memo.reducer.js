@@ -14,6 +14,12 @@ export default (state = InitialState, action) => {
                 }
             }
             return [...state];
+        case types.ADD_NEW_MEMO:
+            state = [...state,action.data]
+            return [...state]
+        case types.DELETE_ONE_MEMO:
+            state = state.filter(v => v._id !== action.data._id)
+            return [...state]
         default:
             return [...state];
     }

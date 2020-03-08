@@ -46,9 +46,37 @@ export const actUpdateMemoItem = (data) => {
 export const actUpdateMemoItemRequest = (data) => {
     return (dispath) => {
         dispath(actUpdateMemoItem(data));
-        CallAPI('/api/memo','PATCH', data).then(doc => console.log(doc)).catch(err => console.log(err))
+        CallAPI('/api/memo','PATCH', data).catch(err => console.log(err))
     }
 }
+
+export const actAddNewMemo = (data) => {
+    return {
+        type: Types.ADD_NEW_MEMO,
+        data
+    }
+}
+
+export const actAddNewMemoRequest = (data) => {
+    return (dispath) => {
+        CallAPI('/api/memo','POST', data).then(doc => {dispath(actAddNewMemo(doc.data))}).catch(err => console.log(err))
+    }
+}
+
+export const actDeleteOneMemo = (data) => {
+    return {
+        type: Types.DELETE_ONE_MEMO,
+        data
+    }
+}
+
+export const actDeleteOneMemoRequest = (data) => {
+    return (dispath) => {
+        dispath(actDeleteOneMemo(data))
+        CallAPI('/api/memo','DELETE', data).catch(err => console.log(err))
+    }
+}
+
 
 // idMemoClicked
 export const actSetIdMemoClicked = (data) => {

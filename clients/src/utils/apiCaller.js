@@ -15,7 +15,6 @@ const callAPI = (endpoint, method = 'GET', body) => {
         })
         .then(data => {
             if(!data.data){
-                console.log('oke')
                 return false;
             }else{
                 return data;

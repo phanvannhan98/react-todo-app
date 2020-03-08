@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import './main.scss'
-import './util.scss'
 import { Redirect } from 'react-router-dom'
+import { SemipolarLoading } from 'react-loadingg';
 import axios from 'axios'
 import CallAPI from '../../utils/apiCaller';
+import './main.scss'
+import './util.scss'
 
 export default () => {
-
+    const [load, setLoad] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isRedirect, setIsRedirect] = useState('')
@@ -15,25 +16,33 @@ export default () => {
         CallAPI('/api/login/checktoken', 'POST').then(doc => {
             setIsRedirect(doc.data ? doc.data : '')
         })
+        return () => {
+            setLoad(false)
+        }
     }, [])
 
     const onSubmit = (e) => {
         e.preventDefault()
-
+        setLoad(true)
         if (email && password)
             axios.post('/api/login/', { email, password })
                 .then(doc => {
                     if (doc.data) {
                         document.cookie = `authorization=${doc.data}; path=/`;
                     }
+                    setLoad(false)
                     setIsRedirect(doc.data)
                 })
+        else
+            setLoad(false) 
     }
 
     if (isRedirect)
         return <Redirect to='/' />
 
     return (
+        <>
+        {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
         <div className="limiter">
             <div className="container-login100">
                 <div className="wrap-login100">
@@ -95,5 +104,6 @@ export default () => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
