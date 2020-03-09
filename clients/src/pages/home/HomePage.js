@@ -32,6 +32,9 @@ export default (props) => {
     const [isSearch, setIsSearch] = useState(false);
     const [isCreateNew, setIsCreateNew] = useState(false);
 
+    const [isAddNewCategory, setIsAddNewCategory] = useState(false);
+    const [categoryNew, setCategoryNew] = useState('');
+
     const [isRedirect, setIsRedirect] = useState('');
 
     const dispatch = useDispatch()
@@ -45,7 +48,7 @@ export default (props) => {
             setIsRedirect(!doc.data)
         })
     }
-    
+
     useEffect(() => {
         document.removeEventListener('click', a)
         CallAPI('/api/login/checktoken', 'POST').then(doc => {
@@ -65,6 +68,7 @@ export default (props) => {
             dispatch(actions.actGetAllMemo([]))
             dispatch(actions.actGetAllCategory([]))
         }
+        // eslint-disable-next-line
     }, [])
 
     if (listMemo.length && load) {
@@ -83,10 +87,9 @@ export default (props) => {
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
     isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) :
         listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
-    
-    listMemo = isSortTitle ? sortTitle(listMemo,isSortTitle) : listMemo
 
-    
+    listMemo = isSortTitle ? sortTitle(listMemo, isSortTitle) : listMemo
+
 
     if (isSearch) {
         listMemo = numAllNote.filter(v => v.name.toLowerCase().includes(searchTxt.toLowerCase()))
@@ -101,27 +104,47 @@ export default (props) => {
         <>
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
             <div className="wrapper" style={load ? { opacity: 1 } : {}}>
-                {/* <div className="modal-wrapper">
-                    <div className="modal-wrapper__content">
-                        <div className="modal-wrapper__content__group">
-                            <label className="modal-wrapper__content__group__title">TITLE</label>
-                            <div className="modal-wrapper__content__group__content">
-                                <div className="border-img">
-                                    <img src="/images/plus-solid.svg" alt="x" />
+                {
+                    isAddNewCategory ?
+                        <div className="modal-wrapper">
+                            <div className="modal-wrapper__content">
+                                <div className="modal-wrapper__content__close" onClick={(e) => {
+                                    setIsAddNewCategory(false)
+                                }}>
+                                    <img src="./images/close.svg" alt="x"/>
                                 </div>
-                                <input type="text" />
+                                <div className="modal-wrapper__content__group">
+                                    <label className="modal-wrapper__content__group__title">Name</label>
+                                    <div className="modal-wrapper__content__group__content">
+                                        <div className="border-img">
+                                            <img src="/images/plus-solid.svg" alt="x" />
+                                        </div>
+                                        <input type="text" value={categoryNew}
+                                            onChange={e => setCategoryNew(e.target.value)}
+                                        />
+
+                                        <button className="btn btn-add"
+                                            onClick={() => {
+                                                var a = listCategory.find(v => v.name === categoryNew);
+                                                if (!a) {
+                                                    dispatch(actions.actAddNewCategoryRequest(categoryNew))
+                                                }
+                                            }}
+                                        >Add</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                */}
-                <div className="logout" 
+                        : ''
+                }
+                <div className="logout"
                     onClick={() => {
                         document.cookie = `authorization=''; path=/`;
                         setIsRedirect(true)
                     }}
-                >
-                    <img src="./images/logout.svg" alt="x"/>
+                >   
+                    Logout
+                    <img src="./images/logout.svg" alt="x" />
                 </div>
                 <div className="sidebar">
                     <div onClick={(e) => {
@@ -160,8 +183,9 @@ export default (props) => {
                             <Category listCategory={listCategory} isClip={isClip} isDeleted={isDeleted} setIsDeleted={setIsDeleted} setIsSearch={setIsSearch} setIsClip={setIsClip} />
                         </li>
                         <li
+                            style={{ marginBottom: '5px' }}
                             className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
-                            onClick={e => { setIsClip(!isClip); dispatch(actions.actSetIdCategoryClicked('')) ; setIsDeleted(false)}}
+                            onClick={e => { setIsClip(!isClip); dispatch(actions.actSetIdCategoryClicked('')); setIsDeleted(false) }}
                         >
                             <div className="icon-title">
                                 <img src="/images/paperclip-solid-1.svg" alt="x" />
@@ -169,10 +193,19 @@ export default (props) => {
                             </div>
                             <span className="post-number">{numAllNote.filter(v => v.isClip).length}</span>
                         </li>
+                        <li
+                            className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
+                            onClick={e => { setIsAddNewCategory(true) }}
+                        >
+                            <div className="icon-title">
+                                <img src="/images/tags-solid.svg" alt="x" />
+                                <span>Add Category</span>
+                            </div>
+                        </li>
                         <li>
                             <div className="wrapper-deleted">
                                 <div className={`wrapper-deleted__btn-deleted siderbar__li-item ${isDeleted ? 'activeCategory' : ''} `}
-                                    onClick={() => { setIsDeleted(!isDeleted); setIsClip(false) }}
+                                    onClick={() => { setIsDeleted(!isDeleted); setIsClip(false); dispatch(actions.actSetIdCategoryClicked('')); }}
                                 >
                                     <img src="./images/trash-solid.svg" alt="x" />
                                     <span>Delete</span>
@@ -205,11 +238,11 @@ export default (props) => {
                             </div>
                         </form>
                         <div className="primary-view__list-todo__sort-title">
-                            <h2 className="primary-view__list-todo__sort-title__title" 
-                                onClick={() => {setIsSortTitle(isSortTitle ? -isSortTitle : -1); setIsSortDate(false)}}
+                            <h2 className="primary-view__list-todo__sort-title__title"
+                                onClick={() => { setIsSortTitle(isSortTitle ? -isSortTitle : -1); setIsSortDate(false) }}
                             >Title</h2>
                             <div className="primary-view__list-todo__sort-title__wrapper-icon-sort"
-                                onClick={() => {setIsSortDate(!isSortDate); setIsSortTitle(0)}}
+                                onClick={() => { setIsSortDate(!isSortDate); setIsSortTitle(0) }}
                             >
                                 <img src={!isSortDate ? "./images/sort-amount-up-alt-solid.svg" : "./images/sort-amount-down-solid.svg"} alt="x" />
                             </div>
@@ -217,26 +250,26 @@ export default (props) => {
                         {listMemo.length ? <MemoList listMemo={listMemo} /> : ''}
                     </div>
                     {
-                        isCreateNew ? <AddNewMemo setIsCreateNew={setIsCreateNew} listCategory={listCategory}/> : 
-                        listMemo.length && listCategory.length ? <MemoContent listMemo={listMemo} listCategory={listCategory} isDeleted={isDeleted}/> : <div className="primary-view__todo-info">
-                        <div className="action-area">
-                            <button className="btn btn-edit">
-                                <img src="./images/pen-solid.svg" alt="x" /> Edit
+                        isCreateNew ? <AddNewMemo setIsAddNewCategory={setIsAddNewCategory} setIsCreateNew={setIsCreateNew} listCategory={listCategory} /> :
+                            listMemo.length && listCategory.length ? <MemoContent listMemo={listMemo} listCategory={listCategory} isDeleted={isDeleted} /> : <div className="primary-view__todo-info">
+                                <div className="action-area">
+                                    <button className="btn btn-edit">
+                                        <img src="./images/pen-solid.svg" alt="x" /> Edit
                             </button>
-                            <button className="btn btn-save">
-                                <img src="./images/save-solid.svg" alt="x" /> Save
+                                    <button className="btn btn-save">
+                                        <img src="./images/save-solid.svg" alt="x" /> Save
                             </button>
-                            <button className="btn btn-clip" >
-                                <img src="./images/paperclip-solid.svg" alt="x" /> Clip
+                                    <button className="btn btn-clip" >
+                                        <img src="./images/paperclip-solid.svg" alt="x" /> Clip
                                 </button>
-                            <div className="wrapper-btn-delete">
-                                <button className="btn btn-delete" >
-                                    <img src="./images/trash-solid.svg" alt="x" /> Delete
+                                    <div className="wrapper-btn-delete">
+                                        <button className="btn btn-delete" >
+                                            <img src="./images/trash-solid.svg" alt="x" /> Delete
                                 </button>
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
 
-                    </div>
+                            </div>
 
                     }
                 </div>

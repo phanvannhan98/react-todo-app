@@ -1,7 +1,7 @@
 import NotFoundPage from './pages/notfoundpage/NotFoundPage'
 import HomePage from './pages/home/HomePage'
 import LoginPage from './pages/login/LoginPage'
-
+import Register from './pages/register/Register'
 const routers = [
     {
         path: '/',
@@ -12,6 +12,11 @@ const routers = [
         path: '/login',
         exact: false,
         main: () => <LoginPage />
+    },
+    {
+        path: '/register',
+        exact: false,
+        main: () => <Register />
     },
     {
         path: '',

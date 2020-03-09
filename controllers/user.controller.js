@@ -4,16 +4,16 @@ const jwt = require('jsonwebtoken')
 let convertToObjectId = require('mongodb').ObjectId;
 
 module.exports.getAllUser = async (req, res) => {
-    var data = await User.find();
+    let data = await User.find();
     res.send(data)
 }
 
 module.exports.checkLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     let data = await User.find();
     let loginData = await Login.find();
 
-    let userLogin = data.find(v => v.username === email && v.password === password);
+    let userLogin = data.find(v => v.username === username && v.password === password);
     if (userLogin) {
         let token = jwt.sign({ userLogin }, 'secret', {
             expiresIn: '1d'
@@ -67,5 +67,25 @@ module.exports.checkTokenMW = async (req, res, next) => {
         })
     } else {
         res.send(false)
+    }
+}
+
+
+module.exports.register = async (req, res) => {
+    console.log(req.body)
+    let user = await User.find();
+    let u = user.find(v => v.username == req.body.username)
+    console.log(u)
+    if(u){
+        console.log('zo')
+        res.send(false);
+        
+    }else{
+        let us = new User({
+            username :  req.body.username,
+            password :  req.body.password
+        })
+
+        us.save().then(doc => res.send(doc)).catch(err => console.log(err))
     }
 }

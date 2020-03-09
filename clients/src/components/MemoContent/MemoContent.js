@@ -29,8 +29,9 @@ export default (props) => {
         setName(memo.name)
         setContent(memo.content)
         setTitle(memo.title)
+        // eslint-disable-next-line
     }, [idMemoClicked])
-
+    
     let here = {
         ...memo,
         dateCreated: dateCreated,

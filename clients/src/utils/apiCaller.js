@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const callAPI = (endpoint, method = 'GET', body) => {
-    var token = document.cookie && document.cookie.split(';').find(n => n.includes('authorization')) ? document.cookie.split(';').find(n => n.includes('authorization')).split('=')[1] : '';
+    let token = document.cookie && document.cookie.split(';').find(n => n.includes('authorization')) ? document.cookie.split(';').find(n => n.includes('authorization')).split('=')[1] : '';
     
     if (token !== '') {
         return axios({

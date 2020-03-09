@@ -418,8 +418,6 @@
       border-left: none;
       box-sizing: border-box;
 
-      
-
       .btn-clip {
         color: #fe8033;
         background-color: #fff1e8;
@@ -546,12 +544,35 @@
   &__content {
     width: 90%;
     height: 90%;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-    background: #f1f1f1;
-    border-radius: 50px;
+    background: #fff;
+    border-radius: 20px;
     padding: 30px;
+    position: relative;
+
+    &__close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #a3536a;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      transition: all 0.2s;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+
+      &:hover {
+        opacity: 0.6;
+        width: 40px;
+        height: 40px;
+      }
+
+      img {
+        width: 30px;
+      }
+    }
 
     &__group {
       &__title {
@@ -562,22 +583,27 @@
 
       &__content {
         display: flex;
+        align-items: center;
 
         .border-img {
           display: flex;
           align-items: center;
-          width: 30px;
-          height: 30px;
-          border: 1px solid #b4b4b4;
+          width: 40px;
+          height: 40px;
+          border: 1px solid #313f46;
           border-right: 0;
           justify-content: center;
         }
 
         input {
-          height: 30px;
+          font-size: 14px;
+          height: 40px;
+          width: 200px;
           box-sizing: border-box;
           background: none;
-          border: 1px solid #b4b4b4;
+          border: 1px solid #313f46;
+          text-indent: 10px;
+          margin-right: 10px;
         }
       }
     }
@@ -611,11 +637,11 @@
   }
 }
 
-.btn-add{
+.btn-add {
   border-color: #313f46;
 }
 
-.logout{
+.logout {
   position: absolute;
   bottom: 40px;
   right: 40px;
@@ -626,12 +652,18 @@
   align-items: center;
   transition: all 0.3s;
   cursor: pointer;
+  opacity: 0.6;
+  flex-direction: column;
 
-  img{
+  img {
+    margin-top: 5px;
     width: 100%;
   }
 
-  &:hover{
+  &:hover {
     width: 70px;
+    opacity: 1;
+    font-size: 20px;
   }
+
 }

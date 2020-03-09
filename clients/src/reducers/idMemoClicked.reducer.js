@@ -1,6 +1,6 @@
 import * as types from '../constants/acctionType'
 
-var InitialState = '';
+let InitialState = '';
 
 export default (state = InitialState, action) => {
     switch (action.type) {

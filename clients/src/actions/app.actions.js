@@ -17,6 +17,21 @@ export const actGetAllCategoryRequest = () => {
     }
 }
 
+export const actAddNewCategory = (data) => {
+    return {
+        type: Types.ADD_NEW_CATEGORY,
+        data
+    }
+}
+
+export const actAddNewCategoryRequest = (name) => {
+    return (dispath) => {
+        CallAPI('/api/category', 'POST', {name}).then(data => {
+            dispath(actAddNewCategory(data.data));
+        })
+    }
+}
+
 // Memo
 export const actGetAllMemo = (data) => {
     return {

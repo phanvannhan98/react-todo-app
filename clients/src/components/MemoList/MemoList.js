@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import moment from 'moment';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Actions from '../../actions/app.actions'
 
 export default (props) => {
@@ -8,9 +8,9 @@ export default (props) => {
 
     const idMemoClicked = useSelector(state => state.idMemoClicked)
 
-    const showMemoList = () => {
-        return props.listMemo.map((value)=>
-            (<li key={value._id} onClick={()=>{
+    const showMemoList = () => props.listMemo.map((value) =>
+        (
+            <li key={value._id} onClick={() => {
                 dispatch(Actions.actSetIdMemoClicked(value._id))
             }}>
                 <button className={value._id === idMemoClicked ? 'activeMemo' : ''}>
@@ -31,15 +31,14 @@ export default (props) => {
                         <img src="./images/paperclip-solid-2.svg" alt="" />
                     </div> : ''}
                 </button>
-            </li>)
+            </li>
         )
-    }
+    )
 
     return (
         <div className="primary-view__list-todo__todos">
             <ul>
                 {showMemoList()}
-                
             </ul>
         </div>
 

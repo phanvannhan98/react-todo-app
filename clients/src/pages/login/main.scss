@@ -4,11 +4,6 @@
   box-sizing: border-box;
 }
 
-body,
-html {
-  height: 100%;
-}
-
 .txt2:focus {
   outline: none !important;
 }
@@ -22,15 +17,6 @@ html {
   color: linear-gradient(to right, #21d4fd, #b721ff);
 }
 
-/*---------------------------------------------*/
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0px;
-}
 
 p {
   font-family: Poppins-Regular;
@@ -40,67 +26,6 @@ p {
   margin: 0px;
 }
 
-ul,
-li {
-  margin: 0px;
-  list-style-type: none;
-}
-
-/*---------------------------------------------*/
-
-input:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-input:focus:-moz-placeholder {
-  color: transparent;
-}
-input:focus::-moz-placeholder {
-  color: transparent;
-}
-input:focus:-ms-input-placeholder {
-  color: transparent;
-}
-
-textarea:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-textarea:focus:-moz-placeholder {
-  color: transparent;
-}
-textarea:focus::-moz-placeholder {
-  color: transparent;
-}
-textarea:focus:-ms-input-placeholder {
-  color: transparent;
-}
-
-input::-webkit-input-placeholder {
-  color: #adadad;
-}
-input:-moz-placeholder {
-  color: #adadad;
-}
-input::-moz-placeholder {
-  color: #adadad;
-}
-input:-ms-input-placeholder {
-  color: #adadad;
-}
-
-textarea::-webkit-input-placeholder {
-  color: #adadad;
-}
-textarea:-moz-placeholder {
-  color: #adadad;
-}
-textarea::-moz-placeholder {
-  color: #adadad;
-}
-textarea:-ms-input-placeholder {
-  color: #adadad;
-}
-
-/*---------------------------------------------*/
 button {
   outline: none !important;
   border: none;
@@ -111,12 +36,6 @@ button:hover {
   cursor: pointer;
 }
 
-iframe {
-  border: none !important;
-}
-
-/*//////////////////////////////////////////////////////////////////
-[ Utility ]*/
 .txt1 {
   font-family: Poppins-Regular;
   font-size: 13px;
@@ -133,10 +52,7 @@ iframe {
   text-decoration: underline;
 }
 
-/*//////////////////////////////////////////////////////////////////
-[ login ]*/
-
-.limiter {
+.wrapper-login {
   width: 100%;
   margin: 0 auto;
 }
@@ -170,9 +86,6 @@ iframe {
   -ms-box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
 }
 
-/*------------------------------------------------------------------
-[ Form ]*/
-
 .login100-form {
   width: 100%;
 }
@@ -184,13 +97,11 @@ iframe {
   color: #333333;
   line-height: 1.2;
   text-align: center;
+  padding-bottom: 70px;
 }
 .login100-form-title i {
   font-size: 60px;
 }
-
-/*------------------------------------------------------------------
-[ Input ]*/
 
 .wrap-input100 {
   width: 100%;
@@ -303,6 +214,10 @@ iframe {
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
   transition: all 0.4s;
+
+  img{
+    width: 16px;
+  }
 }
 
 .btn-show-pass:hover {
@@ -386,20 +301,10 @@ iframe {
   left: 0;
 }
 
-/*------------------------------------------------------------------
-[ Responsive ]*/
-
 @media (max-width: 576px) {
   .wrap-login100 {
     padding: 77px 15px 33px 15px;
   }
-}
-
-/*------------------------------------------------------------------
-[ Alert validate ]*/
-
-.validate-input {
-  position: relative;
 }
 
 .alert-validate::before {
@@ -462,4 +367,9 @@ iframe {
     visibility: visible;
     opacity: 1;
   }
+}
+
+.login100-form-footer{
+  padding-top: 55px;
+  text-align: center;
 }

@@ -1,6 +1,6 @@
 import * as types from '../constants/acctionType'
 
-var InitialState = [];
+let InitialState = [];
 
 export default (state = InitialState, action) => {
     switch (action.type) {
@@ -8,7 +8,7 @@ export default (state = InitialState, action) => {
             state = action.data;
             return [...state];
         case types.UPDATE_MEMO_ITEM:
-            for (var i = 0; i < state.length; i++) {
+            for (let i = 0; i < state.length; i++) {
                 if(state[i]._id === action.data._id){
                     state[i] = action.data
                 }

@@ -8,9 +8,9 @@ export default (props) => {
 
     let listMemo = useSelector(state => state.memo)
 
-    const { isDeleted, setIsSearch, setIsClip, setIsDeleted, listCategory } = props
+    const { setIsSearch, setIsClip, setIsDeleted, listCategory } = props
 
-    listMemo = isDeleted ? listMemo.filter(v => v.dateDeleted) : listMemo.filter(v => !v.dateDeleted)
+    listMemo = listMemo.filter(v => !v.dateDeleted)
 
     const idCategoryClicked = useSelector(state => state.idCategoryClicked)
     const showCategory = () => {

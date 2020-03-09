@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import * as actions from '../../actions/app.actions'
 
 export default (props) => {
     const [dateCreated, setDateCreated] = useState(new Date())
-    const [category, setCategory] = useState(props.listCategory[0]._id)
+    const [category, setCategory] = useState('')
     const [name, setName] = useState('')
     const [content, setContent] = useState('')
     const [title, setTitle] = useState('')
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (props.listCategory.length) {
+            setCategory(props.listCategory[0]._id)
+        }
+        // eslint-disable-next-line
+    }, [])
+
     const onAdd = (event) => {
         event.preventDefault();
         let data = {
             dateCreated,
-            category: props.listCategory.find(v => v._id === category),
+            category: category ? props.listCategory.find(v => v._id === category) : props.listCategory[0],
             name,
             content,
             title
@@ -29,6 +36,39 @@ export default (props) => {
         } else {
             alert('Please enter full information!')
         }
+    }
+
+    if (props.listCategory.length === 0) {
+        return (
+            <div className="primary-view__todo-info">
+                <div className="action-area">
+                    <button className="btn btn-edit">
+                        <img src="./images/pen-solid.svg" alt="x" /> Edit
+                </button>
+                    <button className="btn btn-save">
+                        <img src="./images/save-solid.svg" alt="x" /> Save
+                </button>
+                    <button className="btn btn-clip">
+                        <img src="./images/paperclip-solid.svg" alt="x" /> Clip
+                </button>
+                    <div className="wrapper-btn-delete">
+                        <button className="btn btn-delete">
+                            <img src="./images/trash-solid.svg" alt="x" /> Delete
+                    </button>
+                    </div>
+                </div>
+
+                <div className="todo-info-area">
+                    <button className="btn" style={{width: '200px'}}
+                        onClick={() => {props.setIsAddNewCategory(true)}}
+                    >
+                        <img src="./images/plus-solid.svg" alt="x" />
+                        Add category First
+                    </button>
+                </div>
+
+            </div>
+        )
     }
 
     return (
