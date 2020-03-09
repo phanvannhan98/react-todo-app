@@ -16,6 +16,7 @@ export default (props) => {
     const showCategory = () => {
         return listCategory.map((value) => (
             <li key={value._id}
+                style={{marginRight: document.getElementById('list-category').offsetHeight === 378 ? "11px" : "15px"}}
                 className={idCategoryClicked === value._id ? "list-category__item activeItem" : "list-category__item"}
                 onClick={e => {
                     dispatch(Actions.actSetIdMemoClicked(''))
@@ -35,7 +36,7 @@ export default (props) => {
     }
 
     return (
-        <ul className="list-category">
+        <ul className="list-category" id="list-category">
             {showCategory()}
         </ul>
     )

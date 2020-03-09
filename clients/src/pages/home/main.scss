@@ -66,6 +66,20 @@
   background: #313f46;
 }
 
+#list-category::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: rgb(84, 92, 96);
+}
+
+#list-category::-webkit-scrollbar {
+  width: 5px;
+  background-color: #767676
+}
+
+#list-category::-webkit-scrollbar-thumb {
+  background: #767676
+}
+
 .wrapper {
   width: 100%;
   font-family: "futura pt";
@@ -179,6 +193,8 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease-out;
+    max-height: 377px;
+    overflow-y: auto;
 
     &__item {
       display: flex;
@@ -271,6 +287,7 @@
           margin-left: 21px;
           box-sizing: border-box;
           margin-top: 1px;
+          font-family: futura pt book;
         }
       }
 
@@ -313,6 +330,7 @@
         color: #2b3137;
         opacity: 0.8;
         font-size: 18px;
+        cursor: pointer;
       }
 
       &__wrapper-icon-sort {
@@ -447,6 +465,7 @@
     .todo-info-area {
       padding: 30px 30px 0 40px;
       user-select: text;
+      position: relative;
 
       .wrapper-date-category {
         display: flex;
@@ -542,12 +561,14 @@
   opacity: 1;
 
   &__content {
-    width: 90%;
-    height: 90%;
     background: #fff;
     border-radius: 20px;
     padding: 30px;
+    padding-top: 40px;
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 
     &__close {
       position: absolute;
@@ -575,6 +596,8 @@
     }
 
     &__group {
+      width: 300px;
+
       &__title {
         display: inline-block;
         letter-spacing: 0.6px;
@@ -596,14 +619,15 @@
         }
 
         input {
-          font-size: 14px;
+          font-size: 16px;
           height: 40px;
-          width: 200px;
+          flex: 1;
           box-sizing: border-box;
           background: none;
           border: 1px solid #313f46;
           text-indent: 10px;
-          margin-right: 10px;
+          letter-spacing: 0.6px;
+          font-family: futura pt book;
         }
       }
     }
@@ -642,7 +666,8 @@
 }
 
 .logout {
-  position: absolute;
+  position: fixed;
+  z-index: 1;
   bottom: 40px;
   right: 40px;
   width: 40px;
@@ -665,5 +690,138 @@
     opacity: 1;
     font-size: 20px;
   }
+}
 
+.data-category {
+  margin-top: 30px;
+  width: 300px;
+  max-width: 500px;
+  border: 1px solid #313f46;
+
+  &__wrapper-data {
+    width: 301.5px;
+    overflow-y: scroll;
+    max-height: 470px;
+  }
+
+  li {
+    display: flex;
+    height: 50px;
+    border: 1px solid #313f46;
+    border-bottom: none;
+
+    .cate-wrraper-name {
+      flex: 1;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      border-right: 1px solid #313f46;
+      overflow: hidden;
+      padding: 0 10px;
+
+      &__name {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .cate-action {
+      width: 140px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    &:last-child {
+      border-bottom: 1px solid #313f46;
+    }
+  }
+}
+
+.btn-cate {
+  padding: 10px;
+  color: #fff;
+  font-family: futura pt;
+  font-weight: 0;
+  height: 40px;
+  box-sizing: border-box;
+  width: 60px;
+  transition: 0.3s;
+}
+
+.btn-delete-cate {
+  border-right: 0;
+  background-color: #7f2626;
+  &:hover {
+    border: 1px solid #c37f1b;
+    background: #e8b15f;
+  }
+}
+
+.btn-edit-cate {
+  background-color: #c37f1b;
+
+  &:hover {
+    border: 1px solid #c37f1b;
+    background: #b24c4c;
+  }
+}
+
+.btn-add-cate {
+  border-left: 0;
+  background-color: #c37f1b;
+  &:hover {
+    border: 1px solid #c37f1b;
+    background: #b24c4c;
+  }
+}
+
+.error-cate {
+  color: red;
+  margin-top: 20px;
+}
+
+.edited-tooltip {
+  position: absolute;
+  top: 70px;
+  right: 140px;
+  font-family: futura pt book;
+  font-size: 18px;
+  color: #868686;
+  
+  &:hover &__tooltip{
+    opacity: 1;
+  }
+
+  &:hover &__bot-tooltip{
+    opacity: 1;
+  }
+
+  &__tooltip{
+    transition: 0.3s;
+    position: absolute;
+    top: -175%;
+    left: -38%;
+    background: #000;
+    padding: 5px 15px;
+    color: #FFF;
+    border-radius: 25px;
+    font-family: Poppins-Regular;
+    font-size: 15px;
+    opacity: 0;
+  }
+
+  &__bot-tooltip{
+    transition: 0.3s;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 9px solid black;
+    top: -6px;
+    right: 22px;
+    position: absolute;
+    opacity: 0;
+  }
 }

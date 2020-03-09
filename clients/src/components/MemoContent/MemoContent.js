@@ -31,14 +31,15 @@ export default (props) => {
         setTitle(memo.title)
         // eslint-disable-next-line
     }, [idMemoClicked])
-    
+
     let here = {
         ...memo,
         dateCreated: dateCreated,
         category: props.listCategory.find(v => v._id === category),
         name: name,
         content: content,
-        title: title
+        title: title,
+        dateEdited: new Date()
     }
 
     if (memo)
@@ -74,14 +75,14 @@ export default (props) => {
                             <button
                                 className="btn btn-edit"
                                 onClick={() => {
-                                    let a = window.confirm("do you want to check our other products")
+                                    let a = window.confirm("do you want to restore this post?")
                                     if (a) {
                                         let memo = listMemo.find(v => v._id === idMemoClicked);
                                         memo.dateDeleted = null;
                                         dispatch(actions.actUpdateMemoItemRequest(memo))
                                     }
                                 }}
-                                style={{width: '100px'}}
+                                style={{ width: '100px' }}
                             >
                                 <img src="./images/return.svg" alt="x" style={{ width: '16px' }} /> Restore
                             </button>
@@ -187,9 +188,21 @@ export default (props) => {
                             >
                                 {memo.content}
                             </textarea> :
-                            <p className="todo-info-area__content">
-                                {memo.content}
-                            </p>
+                            <>
+                                <p className="todo-info-area__content">
+                                    {memo.content}
+                                </p>
+                                {
+                                    memo.dateEdited ?
+                                        <div className="edited-tooltip">
+                                            <div>
+                                                <span className="edited-tooltip__tooltip">{moment(memo.dateEdited).format('DD/MM/YYYY')}</span>
+                                                <span className="edited-tooltip__bot-tooltip"></span>
+                                                <span>( edited )</span>
+                                            </div>
+                                        </div> : ''
+                                }
+                            </>
                     }
                 </div>
 

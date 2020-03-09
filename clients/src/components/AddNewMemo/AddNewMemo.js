@@ -30,6 +30,7 @@ export default (props) => {
         }
         if (data.name && data.content && data.title) {
             dispatch(actions.actAddNewMemoRequest(data))
+            dispatch(actions.actSetIdCategoryClicked(''))
             setTimeout(() => {
                 props.setIsCreateNew(false)
             }, 400);
@@ -59,7 +60,7 @@ export default (props) => {
                 </div>
 
                 <div className="todo-info-area">
-                    <button className="btn" style={{width: '200px'}}
+                    <button className="btn" style={{width: '200px', fontSize: '15px'}}
                         onClick={() => {props.setIsAddNewCategory(true)}}
                     >
                         <img src="./images/plus-solid.svg" alt="x" />

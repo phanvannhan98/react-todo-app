@@ -34,6 +34,7 @@ export default (props) => {
 
     const [isAddNewCategory, setIsAddNewCategory] = useState(false);
     const [categoryNew, setCategoryNew] = useState('');
+    const [errorAddCate, setErrorAddCate] = useState(false);
 
     const [isRedirect, setIsRedirect] = useState('');
 
@@ -52,8 +53,7 @@ export default (props) => {
     useEffect(() => {
         document.removeEventListener('click', a)
         CallAPI('/api/login/checktoken', 'POST').then(doc => {
-            setIsRedirect(!doc.data)
-            if (doc.data) {
+            if (doc && doc.data) {
                 dispatch(actions.actGetAllMemoRequest())
                 dispatch(actions.actGetAllCategoryRequest())
                 dispatch(actions.actSetIdCategoryClicked(''))
@@ -62,6 +62,8 @@ export default (props) => {
                     setLoad(false)
                 }, 1500);
                 document.addEventListener('click', a)
+            } else {
+                setIsRedirect(true)
             }
         })
         return () => {
@@ -100,6 +102,13 @@ export default (props) => {
         return <Redirect to='/login' />
     }
 
+    if (isAddNewCategory) {
+        document.documentElement.scrollTop = 0
+        document.body.style.overflow = "hidden"
+    } else {
+        document.body.style.overflow = "unset"
+    }
+
     return (
         <>
             {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
@@ -111,7 +120,7 @@ export default (props) => {
                                 <div className="modal-wrapper__content__close" onClick={(e) => {
                                     setIsAddNewCategory(false)
                                 }}>
-                                    <img src="./images/close.svg" alt="x"/>
+                                    <img src="./images/close.svg" alt="x" />
                                 </div>
                                 <div className="modal-wrapper__content__group">
                                     <label className="modal-wrapper__content__group__title">Name</label>
@@ -120,19 +129,66 @@ export default (props) => {
                                             <img src="/images/plus-solid.svg" alt="x" />
                                         </div>
                                         <input type="text" value={categoryNew}
-                                            onChange={e => setCategoryNew(e.target.value)}
+                                            onChange={e => { setCategoryNew(e.target.value); setErrorAddCate('') }}
                                         />
-
-                                        <button className="btn btn-add"
+                                        <button className="btn-cate btn-add-cate"
                                             onClick={() => {
                                                 var a = listCategory.find(v => v.name === categoryNew);
-                                                if (!a) {
-                                                    dispatch(actions.actAddNewCategoryRequest(categoryNew))
+                                                if (!a && categoryNew.length) {
+                                                    if (categoryNew.length < 5 || categoryNew.length > 16) {
+                                                        categoryNew.length < 5 ? setErrorAddCate('Name is too short!') : setErrorAddCate('Name is too long!')
+                                                    } else
+                                                        dispatch(actions.actAddNewCategoryRequest(categoryNew))
+                                                } else if (categoryNew.length === 0) {
+                                                    setErrorAddCate('Please enter name of Category!')
+                                                } else {
+                                                    setErrorAddCate('Name is exist!')
                                                 }
                                             }}
                                         >Add</button>
                                     </div>
                                 </div>
+
+                                <div className="error-cate" style={errorAddCate ? { opacity: 1 } : { opacity: 0 }}>{errorAddCate ? errorAddCate : 'aaaaaaaaaaa'}</div>
+
+                                {
+                                    listCategory.length ?
+                                        (<ul className="data-category">
+                                            <li>
+                                                <div className="cate-wrraper-name">
+                                                    Name
+                                        </div>
+                                                <div className="cate-action">
+                                                    Action
+                                        </div>
+                                            </li>
+                                            <div className="data-category__wrapper-data">
+                                                {listCategory.map(v => (
+                                                    <li key={v._id}>
+                                                        <div className="cate-wrraper-name">
+                                                            <div className="cate-wrraper-name__name">{v.name}</div>
+                                                        </div>
+                                                        <div className="cate-action">
+                                                            <button className="btn-cate btn-delete-cate"
+                                                                onClick={() => {
+                                                                    if(listMemo.find(m => m.category._id === v._id)){
+                                                                        setErrorAddCate('This category cannot be deleted with an existing post!')
+                                                                    }else{
+                                                                        dispatch(actions.actDeleteOneCategoryRequest(v._id))
+                                                                    }
+                                                                }}
+                                                            >Delete</button>
+                                                            <button className="btn-cate btn-edit-cate">Edit</button>
+                                                        </div>
+                                                    </li>
+                                                ))}
+                                            </div>
+                                        </ul>)
+                                        :
+                                        ''
+                                }
+
+
                             </div>
                         </div>
                         : ''
@@ -142,13 +198,14 @@ export default (props) => {
                         document.cookie = `authorization=''; path=/`;
                         setIsRedirect(true)
                     }}
-                >   
+                >
                     Logout
                     <img src="./images/logout.svg" alt="x" />
                 </div>
                 <div className="sidebar">
                     <div onClick={(e) => {
                         setIsCreateNew(!isCreateNew)
+                        dispatch(actions.actSetIdCategoryClicked(''))
                     }} className="create-new-btn" href="/"><img src="/images/plus-solid.svg" alt="x" /><span>Create New</span></div>
                     <ul>
                         <li
@@ -194,7 +251,7 @@ export default (props) => {
                             <span className="post-number">{numAllNote.filter(v => v.isClip).length}</span>
                         </li>
                         <li
-                            className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
+                            className="siderbar__li-item clip"
                             onClick={e => { setIsAddNewCategory(true) }}
                         >
                             <div className="icon-title">
@@ -270,7 +327,6 @@ export default (props) => {
                                 </div>
 
                             </div>
-
                     }
                 </div>
             </div>

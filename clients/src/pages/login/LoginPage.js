@@ -17,7 +17,7 @@ export default () => {
 
     useEffect(() => {
         CallAPI('/api/login/checktoken', 'POST').then(doc => {
-            setIsRedirect(doc.data ? doc.data : '')
+            setIsRedirect(doc && doc.data ? doc.data : '')
         })
         return () => {
             setLoad(false)
@@ -27,7 +27,6 @@ export default () => {
     const onSubmit = (e) => {
         e.preventDefault()
         setLoad(true)
-        console.log(username, password)
         if (username && password)
             axios.post('/api/login/', { username, password })
                 .then(doc => {

@@ -32,6 +32,21 @@ export const actAddNewCategoryRequest = (name) => {
     }
 }
 
+export const actDeleteOneCategory = (data) => {
+    return {
+        type: Types.DELETE_ONE_CATEGORY,
+        data
+    }
+}
+
+export const actDeleteOneCategoryRequest = (id) => {
+    return (dispath) => {
+        dispath(actDeleteOneCategory(id));
+        CallAPI('/api/category', 'DELETE', {id}).then(data => {
+        }).catch(err => console.log(err))
+    }
+}
+
 // Memo
 export const actGetAllMemo = (data) => {
     return {
