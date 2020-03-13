@@ -5,22 +5,21 @@ import Category from '../../components/Category/Category';
 import MemoList from '../../components/MemoList/MemoList';
 import MemoContent from '../../components/MemoContent/MemoContent';
 import AddNewMemo from '../../components/AddNewMemo/AddNewMemo';
+import ManagerCategory from '../../components/ManagerCategory/ManagerCategory';
 import * as actions from '../../actions/app.actions';
 import './main.scss';
 import { Redirect } from 'react-router-dom';
 import CallAPI from '../../utils/apiCaller';
 
-const sortTitle = (arr, num) => {
-    return arr.sort(function (a, b) {
-        if (a.title > b.title) {
-            return num === 1 ? -1 : 1;
-        }
-        if (b.title > a.title) {
-            return num === 1 ? 1 : -1;
-        }
-        return 0;
-    });
-}
+const sortTitle = (arr, num) => arr.sort((a, b) => {
+    if (a.title > b.title) {
+        return num === 1 ? -1 : 1;
+    }
+    if (b.title > a.title) {
+        return num === 1 ? 1 : -1;
+    }
+    return 0;
+});
 
 export default (props) => {
     const [load, setLoad] = useState(true);
@@ -33,8 +32,7 @@ export default (props) => {
     const [isCreateNew, setIsCreateNew] = useState(false);
 
     const [isAddNewCategory, setIsAddNewCategory] = useState(false);
-    const [categoryNew, setCategoryNew] = useState('');
-    const [errorAddCate, setErrorAddCate] = useState(false);
+
 
     const [isRedirect, setIsRedirect] = useState('');
 
@@ -56,8 +54,6 @@ export default (props) => {
             if (doc && doc.data) {
                 dispatch(actions.actGetAllMemoRequest())
                 dispatch(actions.actGetAllCategoryRequest())
-                dispatch(actions.actSetIdCategoryClicked(''))
-                dispatch(actions.actSetIdMemoClicked(''))
                 setTimeout(() => {
                     setLoad(false)
                 }, 1500);
@@ -69,6 +65,8 @@ export default (props) => {
         return () => {
             dispatch(actions.actGetAllMemo([]))
             dispatch(actions.actGetAllCategory([]))
+            dispatch(actions.actSetIdCategoryClicked(''))
+            document.removeEventListener('click', a)
         }
         // eslint-disable-next-line
     }, [])
@@ -82,10 +80,7 @@ export default (props) => {
     let numAllNote = useSelector(state => state.memo).filter(v => !v.dateDeleted).sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
 
     listMemo = isDeleted ? listMemo.filter(value => value.dateDeleted) : listMemo.filter(value => !value.dateDeleted)
-    if (listMemo.length && idCategoryClicked) {
-        listMemo = listMemo.filter(value => value.category._id === idCategoryClicked)
-    }
-
+    listMemo = idCategoryClicked ? listMemo.filter(value => value.category._id === idCategoryClicked) : listMemo
     listMemo = isClip ? listMemo.filter(value => value.isClip) : listMemo
     isSortDate ? listMemo.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()) :
         listMemo.sort((a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime())
@@ -111,86 +106,10 @@ export default (props) => {
 
     return (
         <>
-            {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
+            {load ? <><div style={{ background: 'rgb(195, 66, 191)', opacity: 0.3, position: 'absolute', width: '100%', height: '100%', zIndex: 2 }}></div><SemipolarLoading color="red" speed="1" size="large" /></> : null}
             <div className="wrapper" style={load ? { opacity: 1 } : {}}>
                 {
-                    isAddNewCategory ?
-                        <div className="modal-wrapper">
-                            <div className="modal-wrapper__content">
-                                <div className="modal-wrapper__content__close" onClick={(e) => {
-                                    setIsAddNewCategory(false)
-                                }}>
-                                    <img src="./images/close.svg" alt="x" />
-                                </div>
-                                <div className="modal-wrapper__content__group">
-                                    <label className="modal-wrapper__content__group__title">Name</label>
-                                    <div className="modal-wrapper__content__group__content">
-                                        <div className="border-img">
-                                            <img src="/images/plus-solid.svg" alt="x" />
-                                        </div>
-                                        <input type="text" value={categoryNew}
-                                            onChange={e => { setCategoryNew(e.target.value); setErrorAddCate('') }}
-                                        />
-                                        <button className="btn-cate btn-add-cate"
-                                            onClick={() => {
-                                                var a = listCategory.find(v => v.name === categoryNew);
-                                                if (!a && categoryNew.length) {
-                                                    if (categoryNew.length < 5 || categoryNew.length > 16) {
-                                                        categoryNew.length < 5 ? setErrorAddCate('Name is too short!') : setErrorAddCate('Name is too long!')
-                                                    } else
-                                                        dispatch(actions.actAddNewCategoryRequest(categoryNew))
-                                                } else if (categoryNew.length === 0) {
-                                                    setErrorAddCate('Please enter name of Category!')
-                                                } else {
-                                                    setErrorAddCate('Name is exist!')
-                                                }
-                                            }}
-                                        >Add</button>
-                                    </div>
-                                </div>
-
-                                <div className="error-cate" style={errorAddCate ? { opacity: 1 } : { opacity: 0 }}>{errorAddCate ? errorAddCate : 'aaaaaaaaaaa'}</div>
-
-                                {
-                                    listCategory.length ?
-                                        (<ul className="data-category">
-                                            <li>
-                                                <div className="cate-wrraper-name">
-                                                    Name
-                                        </div>
-                                                <div className="cate-action">
-                                                    Action
-                                        </div>
-                                            </li>
-                                            <div className="data-category__wrapper-data">
-                                                {listCategory.map(v => (
-                                                    <li key={v._id}>
-                                                        <div className="cate-wrraper-name">
-                                                            <div className="cate-wrraper-name__name">{v.name}</div>
-                                                        </div>
-                                                        <div className="cate-action">
-                                                            <button className="btn-cate btn-delete-cate"
-                                                                onClick={() => {
-                                                                    if(listMemo.find(m => m.category._id === v._id)){
-                                                                        setErrorAddCate('This category cannot be deleted with an existing post!')
-                                                                    }else{
-                                                                        dispatch(actions.actDeleteOneCategoryRequest(v._id))
-                                                                    }
-                                                                }}
-                                                            >Delete</button>
-                                                            <button className="btn-cate btn-edit-cate">Edit</button>
-                                                        </div>
-                                                    </li>
-                                                ))}
-                                            </div>
-                                        </ul>)
-                                        :
-                                        ''
-                                }
-
-
-                            </div>
-                        </div>
+                    isAddNewCategory ? <ManagerCategory setLoad={setLoad} setIsAddNewCategory={setIsAddNewCategory} />
                         : ''
                 }
                 <div className="logout"
@@ -227,9 +146,8 @@ export default (props) => {
                         <li>
                             <a className="category-btn" href="/" onClick={(e) => {
                                 e.preventDefault();
-                                var z = document.getElementsByClassName('list-category')[0];
-
-                                z.style.maxHeight = z.style.maxHeight ? null : z.scrollHeight + "px";
+                                var z = document.getElementById('list-category');
+                                z.style.maxHeight = z.style.maxHeight ? null : '39vh';
                                 e.currentTarget.classList.toggle('active')
                             }}>
                                 <div className="icon-title">
@@ -242,7 +160,7 @@ export default (props) => {
                         <li
                             style={{ marginBottom: '5px' }}
                             className={isClip ? "siderbar__li-item clip activeCategory" : "siderbar__li-item clip"}
-                            onClick={e => { setIsClip(!isClip); dispatch(actions.actSetIdCategoryClicked('')); setIsDeleted(false) }}
+                            onClick={e => { setIsClip(!isClip); dispatch(actions.actSetIdCategoryClicked('')); setIsDeleted(false); setIsSearch(false) }}
                         >
                             <div className="icon-title">
                                 <img src="/images/paperclip-solid-1.svg" alt="x" />
@@ -251,18 +169,18 @@ export default (props) => {
                             <span className="post-number">{numAllNote.filter(v => v.isClip).length}</span>
                         </li>
                         <li
-                            className="siderbar__li-item clip"
+                            className="siderbar__li-item managerCate"
                             onClick={e => { setIsAddNewCategory(true) }}
                         >
                             <div className="icon-title">
-                                <img src="/images/tags-solid.svg" alt="x" />
-                                <span>Add Category</span>
+                                <img src="/images/setting.svg" alt="x" width="16px" />
+                                <span>Manager Category</span>
                             </div>
                         </li>
                         <li>
                             <div className="wrapper-deleted">
                                 <div className={`wrapper-deleted__btn-deleted siderbar__li-item ${isDeleted ? 'activeCategory' : ''} `}
-                                    onClick={() => { setIsDeleted(!isDeleted); setIsClip(false); dispatch(actions.actSetIdCategoryClicked('')); }}
+                                    onClick={() => { setIsDeleted(!isDeleted); setIsClip(false); setIsSearch(false); dispatch(actions.actSetIdCategoryClicked('')); }}
                                 >
                                     <img src="./images/trash-solid.svg" alt="x" />
                                     <span>Delete</span>
@@ -273,7 +191,7 @@ export default (props) => {
                 </div>
                 <div className="primary-view">
                     <div className="primary-view__list-todo">
-                        <form onSubmit={(e) => { e.preventDefault(); setIsSearch(true) }}>
+                        <form onSubmit={(e) => { e.preventDefault(); setIsSearch(true); dispatch(actions.actSetIdCategoryClicked('')) }}>
                             <div className="primary-view__list-todo__search">
                                 <div className="primary-view__list-todo__search__input-wrapper">
                                     <input
@@ -311,18 +229,18 @@ export default (props) => {
                             listMemo.length && listCategory.length ? <MemoContent listMemo={listMemo} listCategory={listCategory} isDeleted={isDeleted} /> : <div className="primary-view__todo-info">
                                 <div className="action-area">
                                     <button className="btn btn-edit">
-                                        <img src="./images/pen-solid.svg" alt="x" /> Edit
-                            </button>
+                                        <img src="./images/pen-solid.svg" alt="x" /> <span>Edit</span>
+                                    </button>
                                     <button className="btn btn-save">
-                                        <img src="./images/save-solid.svg" alt="x" /> Save
-                            </button>
+                                        <img src="./images/save-solid.svg" alt="x" /> <span>Save</span>
+                                    </button>
                                     <button className="btn btn-clip" >
-                                        <img src="./images/paperclip-solid.svg" alt="x" /> Clip
-                                </button>
+                                        <img src="./images/paperclip-solid.svg" alt="x" /> <span>Clip</span>
+                                    </button>
                                     <div className="wrapper-btn-delete">
                                         <button className="btn btn-delete" >
-                                            <img src="./images/trash-solid.svg" alt="x" /> Delete
-                                </button>
+                                            <img src="./images/trash-solid.svg" alt="x" /> <span>Delete</span>
+                                        </button>
                                     </div>
                                 </div>
 

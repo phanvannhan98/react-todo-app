@@ -42,7 +42,24 @@ export const actDeleteOneCategory = (data) => {
 export const actDeleteOneCategoryRequest = (id) => {
     return (dispath) => {
         dispath(actDeleteOneCategory(id));
+        dispath(actDeleteMemoByCate(id))
         CallAPI('/api/category', 'DELETE', {id}).then(data => {
+        }).catch(err => console.log(err))
+    }
+}
+
+export const actUpdateCategory = (data) => {
+    return {
+        type: Types.UPDATE_CATE_ITEM,
+        data
+    }
+}
+
+export const actUpdateCategoryRequest = (data) => {
+    return (dispath) => {
+        dispath(actUpdateCategory(data))
+        CallAPI('/api/category', 'PATCH', data).then(doc => {
+            console.log(doc)
         }).catch(err => console.log(err))
     }
 }
@@ -60,7 +77,7 @@ export const actGetAllMemoRequest = () => {
         CallAPI('/api/memo').then(data => {
             dispath(actGetAllMemo(data.data));
             if(data.data.length){
-                dispath(actSetIdMemoClicked(data.data[0]._id))
+                dispath(actSetIdMemoClicked(''))
             }
         })
     }
@@ -107,6 +124,12 @@ export const actDeleteOneMemoRequest = (data) => {
     }
 }
 
+export const actDeleteMemoByCate = (data) => {
+    return {
+        type: Types.DELETE_MEMO_BY_IDCATE,
+        data
+    }
+}
 
 // idMemoClicked
 export const actSetIdMemoClicked = (data) => {

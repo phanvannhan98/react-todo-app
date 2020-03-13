@@ -16,7 +16,6 @@ export default (props) => {
     const showCategory = () => {
         return listCategory.map((value) => (
             <li key={value._id}
-                style={{marginRight: document.getElementById('list-category').offsetHeight === 378 ? "11px" : "15px"}}
                 className={idCategoryClicked === value._id ? "list-category__item activeItem" : "list-category__item"}
                 onClick={e => {
                     dispatch(Actions.actSetIdMemoClicked(''))
@@ -34,6 +33,19 @@ export default (props) => {
             </li>
         ))
     }
+
+    setTimeout(() => {
+        const ul = document.getElementById('list-category');
+
+        if (ul && ul.offsetHeight >= window.innerHeight * 0.39) {
+            ul.style.width = 'calc(100% + 5px)'
+            ul.style.overflowY = 'auto'
+        } else if (ul) {
+            ul.style.overflow = 'hidden'
+            ul.style.width = '100%'
+        }
+    }, 300);
+
 
     return (
         <ul className="list-category" id="list-category">

@@ -54,12 +54,12 @@ export default (props) => {
                                     onClick={() => { setIsEdit(!isEdit) }}
                                     style={isEdit ? { backgroundColor: '#ffeb3b45' } : {}}
                                 >
-                                    <img src="./images/pen-solid.svg" alt="x" /> {!isEdit ? 'Edit' : 'Cancel'}
+                                    <img src="./images/pen-solid.svg" alt="x" /> <span>{!isEdit ? 'Edit' : 'Cancel'}</span>
                                 </button>
                                 <button className="btn btn-save"
                                     onClick={isEdit ? () => { dispatch(actions.actUpdateMemoItemRequest(here)); setIsEdit(false) } : () => { }}
                                 >
-                                    <img src="./images/save-solid.svg" alt="x" /> Save
+                                    <img src="./images/save-solid.svg" alt="x" /> <span>Save</span>
                                 </button>
                                 <button className="btn btn-clip"
                                     onClick={() => {
@@ -68,7 +68,7 @@ export default (props) => {
                                         dispatch(actions.actUpdateMemoItemRequest(memo))
                                     }}
                                 >
-                                    <img src="./images/paperclip-solid.svg" alt="x" /> Clip
+                                    <img src="./images/paperclip-solid.svg" alt="x" /> <span>Clip</span>
                                 </button>
                             </>
                             :
@@ -84,7 +84,7 @@ export default (props) => {
                                 }}
                                 style={{ width: '100px' }}
                             >
-                                <img src="./images/return.svg" alt="x" style={{ width: '16px' }} /> Restore
+                                <img src="./images/return.svg" alt="x" style={{ width: '16px' }} /> <span>Restore</span>
                             </button>
 
                     }
@@ -106,7 +106,7 @@ export default (props) => {
                                 }
                             }
                         }}>
-                            <img src="./images/trash-solid.svg" alt="x" /> Delete
+                            <img src="./images/trash-solid.svg" alt="x" /> <span>Delete</span>
                             </button>
                     </div>
                 </div>

@@ -9,16 +9,19 @@ export default (state = InitialState, action) => {
             return [...state];
         case types.UPDATE_MEMO_ITEM:
             for (let i = 0; i < state.length; i++) {
-                if(state[i]._id === action.data._id){
+                if (state[i]._id === action.data._id) {
                     state[i] = action.data
                 }
             }
             return [...state];
         case types.ADD_NEW_MEMO:
-            state = [...state,action.data]
+            state = [...state, action.data]
             return [...state]
         case types.DELETE_ONE_MEMO:
             state = state.filter(v => v._id !== action.data._id)
+            return [...state]
+        case types.DELETE_MEMO_BY_IDCATE:
+            state = state.filter(v => v.category._id !== action.data)
             return [...state]
         default:
             return [...state];

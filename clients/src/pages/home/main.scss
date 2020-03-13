@@ -179,6 +179,10 @@
     }
   }
 
+  .clip, .managerCate {
+    margin-bottom: 5px;
+  }
+
   .category-btn::after {
     content: "\002B";
     display: flex;
@@ -189,11 +193,11 @@
   }
 
   .list-category {
-    margin-left: 58px;
+    padding-left: 58px;
+    width: 100%;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease-out;
-    max-height: 377px;
     overflow-y: auto;
 
     &__item {
@@ -229,6 +233,7 @@
     &__btn-deleted {
       margin-bottom: 0;
       justify-content: left;
+      
     }
   }
 
@@ -343,6 +348,9 @@
     }
 
     &__todos {
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+
       li {
         height: 80px;
         width: 100%;
@@ -379,6 +387,7 @@
 
           .wrapper-date-category {
             display: flex;
+            flex-wrap: wrap;
             color: #313f46;
             font-family: "futura pt book";
             font-size: 14px;
@@ -427,7 +436,7 @@
       display: flex;
       width: 100%;
       height: 70px;
-      padding: 0 20px 0 30px;
+      padding: 0 25px 0 30px;
       justify-content: left;
       background-color: #f4f4f4;
       align-items: center;
@@ -454,6 +463,7 @@
           background-color: #313f46;
           width: 100px;
           color: #fff;
+          margin-right: 0;
 
           &:hover {
             background-color: #395d6fd6 !important;
@@ -463,12 +473,13 @@
     }
 
     .todo-info-area {
-      padding: 30px 30px 0 40px;
+      padding: 30px 30px 20px 40px;
       user-select: text;
       position: relative;
 
       .wrapper-date-category {
         display: flex;
+        flex-wrap: wrap;
         color: #2b3137;
         font-family: "futura pt book";
         font-size: 14px;
@@ -520,6 +531,8 @@
         font-size: 16px;
         font-family: "futura pt";
         color: #2b3137;
+        max-height: 60vh;
+        overflow-y: auto;
 
         &::selection {
           background-color: rgba(254, 97, 0, 0.4);
@@ -596,7 +609,7 @@
     }
 
     &__group {
-      width: 300px;
+      min-width: 300px;
 
       &__title {
         display: inline-block;
@@ -694,14 +707,14 @@
 
 .data-category {
   margin-top: 30px;
-  width: 300px;
+  width: 100%;
   max-width: 500px;
   border: 1px solid #313f46;
 
   &__wrapper-data {
-    width: 301.5px;
+    width: calc(100% + 3.5px);
     overflow-y: scroll;
-    max-height: 470px;
+    max-height: 50vh;
   }
 
   li {
@@ -772,10 +785,19 @@
 
 .btn-add-cate {
   border-left: 0;
-  background-color: #c37f1b;
+  background-color: #30b269;
   &:hover {
     border: 1px solid #c37f1b;
     background: #b24c4c;
+  }
+}
+
+.btn-cancel-cate {
+  border-left: 0;
+  background-color: #a0263e;
+  &:hover {
+    border: 1px solid #c37f1b;
+    background: #e8b15f;
   }
 }
 
@@ -823,5 +845,95 @@
     right: 22px;
     position: absolute;
     opacity: 0;
+  }
+}
+
+
+@media only screen and (max-width: 425px) {
+  .sidebar{
+    display: none;
+  }
+
+  .primary-view{
+    flex-wrap: wrap;
+    width: 100%;
+
+    &__list-todo{
+      width: 100%;
+    }
+
+    .action-area{
+      border-left: 1px solid #dcdcdc;
+      border-top: 1px solid #dcdcdc;
+    }
+
+    .todo-info-area{
+      &__title{
+        font-size: 32px;
+      }
+    }
+  }
+
+  .edited-tooltip{
+    top: 30px;
+    right: 30px;
+  }
+
+  .logout{
+    display: none;
+  }
+}
+
+
+@media only screen and (max-width: 375px) {
+  .action-area{
+    .btn{
+      width: 40px;
+      margin-right: 13px;
+
+      img{
+        margin: 0;
+      }
+
+      span{
+        display: none;
+      }
+    }
+  }
+
+  .primary-view{
+    flex-wrap: wrap;
+    width: 100%;
+
+    &__list-todo{
+      width: 100%;
+    }
+
+    .action-area{
+      border-left: 1px solid #dcdcdc;
+      border-top: 1px solid #dcdcdc;
+    }
+
+    .todo-info-area{
+      padding: 20px;
+      
+      &__title{
+        font-size: 25px;
+      }
+    }
+  }
+
+  .edited-tooltip{
+    display: none;
+  }
+
+  .wrapper-date-category{
+    &__date{
+      input{
+        width: 150px;
+        margin-left: 2px;
+        margin-bottom: 10px;
+      }
+    }
   }
 }
